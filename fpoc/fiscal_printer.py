@@ -22,6 +22,7 @@
 
 import re
 from openerp import netsvc
+from openerp import tools, models, fields, api, _
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
@@ -29,6 +30,11 @@ from controllers.main import do_event
 from datetime import datetime
 
 from openerp.addons.fpoc.controllers.main import DenialService
+
+import logging
+_logger = logging.getLogger(__name__)
+_logger.setLevel('DEBUG')
+
 
 class fiscal_printer_disconnected(osv.TransientModel):
     """
@@ -45,6 +51,19 @@ class fiscal_printer_disconnected(osv.TransientModel):
         'session_id': fields.char(string='Session'),
         'user_id': fields.many2one('res.users', string='Responsable'),
     }
+
+    def auto_connect(self, cr, uid, context=None):
+        """ si hay una impresora desconectada la conecta, llamado desde cron
+        """
+        ids = self.search(cr, uid, [], context=context)
+        # si hay alguna desconectada la conecto
+        if ids:
+            for fiscal_id in ids:
+                self.create_fiscal_printer(cr, uid, [fiscal_id])
+                # verifico que los diarios la tengan y si no se las pongo.
+                # TODO si hay mas de una impresora esto no anda.
+                fiscal_printer_obj = self.pool.get('fpoc.fiscal_printer')
+                fiscal_printer_obj.auto_attach(cr, uid, ids)
 
     def _update_(self, cr, uid, force=True, context=None):
         cr.execute('SELECT COUNT(*) FROM %s' % self._table)
@@ -92,7 +111,7 @@ class fiscal_printer_disconnected(osv.TransientModel):
                 'protocol': pri.protocol,
                 'model': pri.model,
                 'serialNumber': pri.serialNumber,
-		'session_id': pri.session_id
+                'session_id': pri.session_id
             }
             fp_obj.create(cr, uid, values)
         return {
@@ -108,13 +127,14 @@ class fiscal_printer_disconnected(osv.TransientModel):
 
 fiscal_printer_disconnected()
 
+
 class fiscal_printer(osv.osv):
     """
     The fiscal printer entity.
     """
 
     def _get_status(self, cr, uid, ids, field_name, arg, context=None):
-        s = self.get_state(cr, uid, ids, context) 
+        s = self.get_state(cr, uid, ids, context)
 
         r = {}
         for p_id in ids:
@@ -123,7 +143,7 @@ class fiscal_printer(osv.osv):
 	                dt = datetime.strptime(s[p_id]['clock'], "%Y-%m-%d %H:%M:%S")
 			clock_now = dt.strftime("%Y-%m-%d %H:%M:%S")
 		else:
-			clock_now = str(datetime.datetime.now())	
+			clock_now = str(datetime.datetime.now())
                 r[p_id] = {
                     #'clock': dt.strftime("%Y-%m-%d %H:%M:%S"),
                     'clock': clock_now,
@@ -160,6 +180,18 @@ class fiscal_printer(osv.osv):
     ]
 
     _sql_constraints = [ ('model_serialNumber_unique', 'unique("model", "serialNumber")', 'this printer with this model and serial number yet exists') ]
+
+    def auto_attach(self, cr, uid, ids, context=None):
+        # TODO si hay mas de una impresora esto no anda.
+        journal_obj = self.pool.get('account.journal')
+        journal_ids = journal_obj.search(cr, uid, ['|',
+                                                    ('code', '=', 'RVE08'),
+                                                    ('code', '=', 'VEN08')])
+        ids = self.search(cr, uid, [])
+        for fp_id in ids:
+            for journ in journal_obj.browse(cr, uid, journal_ids):
+                journ.fiscal_printer_id = fp_id
+
 
     def update_printers(self, cr, uid, ids, context=None):
         r = do_event('info', {})
@@ -252,8 +284,8 @@ class fiscal_printer(osv.osv):
             fparms['name'] = fp.name
             fparms['options'] = options
             fparms['ticket'] = ticket
-	    #import pdb;pdb.set_trace()
-            #event_result = do_event('make_fiscal_ticket', fparms,
+            # import pdb;pdb.set_trace()
+            # event_result = do_event('make_fiscal_ticket', fparms,
             event_result = do_event('make_ticket_notacredito', fparms,
                                     session_id=fp.session_id, printer_id=fp.name)
             r[fp.id] = event_result.pop() if event_result else False

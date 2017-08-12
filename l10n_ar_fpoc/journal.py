@@ -5,6 +5,8 @@ from openerp.osv import osv, fields
 import logging
 
 _logger = logging.getLogger(__name__)
+_logger.setLevel('DEBUG')
+
 _schema = logging.getLogger(__name__ + '.schema')
 
 class account_journal(osv.osv):

@@ -37,6 +37,8 @@ from Queue import Queue, Full, Empty
 import logging
 
 _logger = logging.getLogger(__name__)
+_logger.setLevel('DEBUG')
+
 # jinegconpkicmfefahjgkpinkgoabnme
 # access_control_allow_origin = 'chrome-extension://gileacnnoefamnjnhjnijommagpamona'
 access_control_allow_origin = 'chrome-extension://jinegconpkicmfefahjgkpinkgoabnme'
@@ -50,7 +52,7 @@ response_hub = {}
 to_remove = {}
 timeout = 5
 
-## Monkey path for HttpRequest
+# Monkey path for HttpRequest
 http_old_dispatch = oeweb.HttpRequest.dispatch
 
 def http_dispatch(self):
@@ -62,8 +64,9 @@ def http_dispatch(self):
 
 oeweb.HttpRequest.dispatch = http_dispatch
 
-## Monkey path for JsonRequest
+# Monkey path for JsonRequest
 json_old_dispatch = oeweb.JsonRequest.dispatch
+
 
 def json_dispatch(self):
     r = json_old_dispatch(self)
@@ -74,10 +77,11 @@ def json_dispatch(self):
 
 oeweb.JsonRequest.dispatch = json_dispatch
 
-## Monkey path to capture connection_dropped
+# Monkey path to capture connection_dropped
 from werkzeug.serving import WSGIRequestHandler
 
 wsgi_old_connection_dropped = WSGIRequestHandler.connection_dropped
+
 
 def connection_dropped(self, error, environ=None):
     """Called if the connection was closed by the client.  By default
@@ -98,6 +102,7 @@ def connection_dropped(self, error, environ=None):
 
 WSGIRequestHandler.connection_dropped = connection_dropped
 
+
 class DenialService(Exception):
     def __init__(self, message):
         self.message = message
@@ -105,7 +110,8 @@ class DenialService(Exception):
     def __str__(self):
         return self.message
 
-## Event manager
+
+# Event manager
 def do_event(event, data={}, session_id=None, printer_id=None, control=False):
     """
     Execute an event in the client side.
@@ -147,6 +153,7 @@ def do_event(event, data={}, session_id=None, printer_id=None, control=False):
 
     return [ result[qid] for qid in qids if qid in result ]
 
+
 def do_return(req, result):
     """
     Take the response from the client side, and push result in the queue.
@@ -166,13 +173,14 @@ def do_return(req, result):
     event_event[this_event_id].set()
     del event_event[this_event_id]
 
-## Controller
+
+# Controller
 class FiscalPrinterController(oeweb.Controller):
     _cp_path = '/fp'
 
     @oeweb.jsonrequest
     def login(self, req, database, login, password, **kw):
-	import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         wsgienv = req.httprequest.environ
         env = dict(
             base_location=req.httprequest.url_root.rstrip('/'),
@@ -230,7 +238,7 @@ class FiscalPrinterController(oeweb.Controller):
     def event_source_iter(self, event_id):
         qid = self.qid
 
-        yield '\n\n' # Force connection recognition on client
+        yield '\n\n'  # Force connection recognition on client
         while True:
             try:
                 message = event_hub[qid].get(timeout=timeout)

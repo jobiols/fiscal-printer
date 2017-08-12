@@ -30,6 +30,8 @@ from datetime import datetime
 import logging
 
 _logger = logging.getLogger(__name__)
+_logger.setLevel('DEBUG')
+
 _schema = logging.getLogger(__name__ + '.schema')
 
 _header_lines = ['headerLine 1', 'headerLine 2', 'headerLine 3', 'headerLine 4', 'headerLine 5', 'headerLine 6', 'headerLine 7']

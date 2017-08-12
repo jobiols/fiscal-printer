@@ -3,6 +3,7 @@ from openerp import netsvc
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
+
 class fiscal_printer_configuration(osv.osv):
     """
     This configuration is independent of the printer, is related to point of sale.
@@ -94,8 +95,7 @@ class fiscal_printer_user(osv.AbstractModel):
 				r[fpu.id]['fiscal_printer_paper_state'] = 'ok'
 			else:
 				r[fpu.id]['fiscal_printer_paper_state'] = 'unknown'
-			
-	
+
         return r
 
     _name = 'fpoc.user'
