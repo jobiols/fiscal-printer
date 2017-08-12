@@ -4,15 +4,13 @@
     'category': 'Accounting',
     'demo_xml': [],
     'depends': ['account'],
-    'name': 'RA POS',
+    'name': 'RA POC',
     'description': '___',
     'init_xml': [],
     'installable': True,
     'license': 'AGPL-3',
     'test': [ ],
-    'data': [
-	#'ra_fpoc_view.xml'
-    ],
+    'data': [ ],
     'post_load': '',
     'js': [],
     'css': [],

@@ -8,8 +8,18 @@
             <field name="inherit_id" ref="account.invoice_form" />
             <field name="arch" type="xml">
                 <field name="move_id" position="after">
-                        <field name="nro_ticket_impreso" />
+                    <field name="nro_ticket_impreso" />
                 </field>
+
+                <!-- el documento origen debe estar porque sino se cuelga al mandar un ticket-->
+
+                <xpath expr="//field[@name='origin']" position="attributes">
+<!--                    <attribute name="required">True</attribute> -->
+
+                    <attribute name="attrs">{'required':[('type','=','out_refund')]}</attribute>
+
+                </xpath>
+
             </field>
         </record>
 
