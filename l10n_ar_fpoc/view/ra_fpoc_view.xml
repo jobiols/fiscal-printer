@@ -11,13 +11,12 @@
                     <field name="nro_ticket_impreso" />
                 </field>
 
-                <!-- el documento origen debe estar porque sino se cuelga al mandar un ticket-->
+                <!-- el documento origen debe estar porque sino se cuelga al mandar un ticket
+                     pero solo lo requerimos en notas de credito para el cliente.
+                -->
 
                 <xpath expr="//field[@name='origin']" position="attributes">
-<!--                    <attribute name="required">True</attribute> -->
-
                     <attribute name="attrs">{'required':[('type','=','out_refund')]}</attribute>
-
                 </xpath>
 
             </field>

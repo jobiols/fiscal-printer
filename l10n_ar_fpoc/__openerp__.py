@@ -12,9 +12,10 @@
     'license': 'AGPL-3',
     'test': [ ],
     'data': [
-	'ra_fpoc_view.xml',
-        'data/journal_view.xml',
-        'data/invoice_workflow.xml',
+        'view/ra_fpoc_view.xml',
+        'view/journal_view.xml',
+        'view/invoice_workflow.xml',
+        'view/invoice_view.xml',
     ],
     'post_load': '',
     'js': [],

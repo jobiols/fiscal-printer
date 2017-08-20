@@ -33,10 +33,11 @@ from openerp.addons.fpoc.controllers.main import DenialService
 
 import logging
 _logger = logging.getLogger(__name__)
+#TODO Quitar esto cuando funcione
 _logger.setLevel('DEBUG')
 
 
-class fiscal_printer_disconnected(osv.TransientModel):
+class FiscalPrinterDisconnected(osv.TransientModel):
     """
     Disconnected but published printers.
     """
@@ -94,11 +95,11 @@ class fiscal_printer_disconnected(osv.TransientModel):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         self._update_(cr, uid, force=True)
-        return super(fiscal_printer_disconnected, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
+        return super(FiscalPrinterDisconnected, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         self._update_(cr, uid, force=False)
-        return super(fiscal_printer_disconnected, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        return super(FiscalPrinterDisconnected, self).read(cr, uid, ids, fields=fields, context=context, load=load)
 
     def create_fiscal_printer(self, cr, uid, ids, context=None):
         """
@@ -125,10 +126,8 @@ class fiscal_printer_disconnected(osv.TransientModel):
             'context': context,
         }
 
-fiscal_printer_disconnected()
 
-
-class fiscal_printer(osv.osv):
+class FiscalPrinter(osv.osv):
     """
     The fiscal printer entity.
     """
@@ -139,11 +138,11 @@ class fiscal_printer(osv.osv):
         r = {}
         for p_id in ids:
             if s[p_id]:
-		if s[p_id].has_key('clock'):
-	                dt = datetime.strptime(s[p_id]['clock'], "%Y-%m-%d %H:%M:%S")
-			clock_now = dt.strftime("%Y-%m-%d %H:%M:%S")
-		else:
-			clock_now = str(datetime.datetime.now())
+                if s[p_id].has_key('clock'):
+                    dt = datetime.strptime(s[p_id]['clock'], "%Y-%m-%d %H:%M:%S")
+                    clock_now = dt.strftime("%Y-%m-%d %H:%M:%S")
+                else:
+                    clock_now = str(datetime.datetime.now())
                 r[p_id] = {
                     #'clock': dt.strftime("%Y-%m-%d %H:%M:%S"),
                     'clock': clock_now,
@@ -152,8 +151,8 @@ class fiscal_printer(osv.osv):
                 }
             else:
                 r[p_id]= {
-                    'clock':False,
-                    'printerStatus':'Offline',
+                    'clock': False,
+                    'printerStatus': 'Offline',
                     'fiscalStatus': 'Offline',
                 }
         return r
@@ -179,10 +178,10 @@ class fiscal_printer(osv.osv):
     _constraints = [
     ]
 
-    _sql_constraints = [ ('model_serialNumber_unique', 'unique("model", "serialNumber")', 'this printer with this model and serial number yet exists') ]
+    _sql_constraints = [('model_serialNumber_unique', 'unique("model", "serialNumber")', 'this printer with this model and serial number yet exists')]
 
     def auto_attach(self, cr, uid, ids, context=None):
-        # TODO si hay mas de una impresora esto no anda.
+        # TODO si hay mas de una impresora esto no anda y tiene harcodeado el diario (jobiols)
         journal_obj = self.pool.get('account.journal')
         journal_ids = journal_obj.search(cr, uid, ['|',
                                                     ('code', '=', 'RVE08'),
@@ -191,7 +190,6 @@ class fiscal_printer(osv.osv):
         for fp_id in ids:
             for journ in journal_obj.browse(cr, uid, journal_ids):
                 journ.fiscal_printer_id = fp_id
-
 
     def update_printers(self, cr, uid, ids, context=None):
         r = do_event('info', {})
@@ -300,7 +298,6 @@ class fiscal_printer(osv.osv):
                                     session_id=fp.session_id, printer_id=fp.name)
             r[fp.id] = event_result.pop() if event_result else False
         return r
- 
-fiscal_printer()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

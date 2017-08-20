@@ -49,6 +49,7 @@ class fiscal_printer_configuration(osv.osv):
 
 fiscal_printer_configuration()
 
+
 class fiscal_printer_user(osv.AbstractModel):
     """
     Fiscal printer user is a Abstract class to be used by the owner of the fiscal printer.
@@ -59,7 +60,7 @@ class fiscal_printer_user(osv.AbstractModel):
         r = {}
         for fpu in self.browse(cr, uid, ids, context):
             r[fpu.id] = dict(zip(fields_name, ['unknown']*len(fields_name)))
-	    #import pdb;pdb.set_trace()
+            #import pdb;pdb.set_trace()
 
             if not fpu.fiscal_printer_id:
                 continue
@@ -68,33 +69,34 @@ class fiscal_printer_user(osv.AbstractModel):
             res = fpu.fiscal_printer_configuration_id.solve_status(res)[fpu.fiscal_printer_id.id]
 
             if res:
-		if res.has_key('printer_state'):
-                	r[fpu.id]['fiscal_printer_paper_state'] = res['paper_state'] if 'paper_state' in res else 'unknown'
-                	r[fpu.id]['fiscal_printer_fiscal_state'] = res['fiscal_state'] if 'fiscal_state' in res else 'unknown'
-	                r[fpu.id]['fiscal_printer_state'] = res['printer_state'] if 'printer_state' in res else 'unknown'
-	                #r[fpu.id]['fiscal_printer_paper_state'] = res['slipHasPaper'] if 'slipHasPaper' in res else 'unknown'
-        	        #r[fpu.id]['fiscal_printer_fiscal_state'] = res['strFiscalStatus'] if 'strFiscalStatus' in res else 'unknown'
-		else:
-			if 'strFiscalStatus' in res:
-				if 'Jornada fiscal cerrada' in res['strFiscalStatus']:
-					r[fpu.id]['fiscal_printer_fiscal_state'] = 'close'
-				else:
-					if 'Jornada fiscal abierta' in res['strFiscalStatus']:
-						r[fpu.id]['fiscal_printer_fiscal_state'] = 'open'
-					else:
-						r[fpu.id]['fiscal_printer_fiscal_state'] = 'unknown'
-                	#r[fpu.id]['fiscal_printer_state'] = res['strPrinterStatus'] if 'strPrinterStatus' in res else 'unknown'
-			if 'strPrinterStatus' in res:
-				if 'Online' in res['strPrinterStatus']:
-					r[fpu.id]['fiscal_printer_state'] = 'ready'
-				else:
-					r[fpu.id]['fiscal_printer_state'] = 'offline'
-			else:
-				r[fpu.id]['fiscal_printer_state'] = 'unknown'
-			if 'slipHasPaper' in res:
-				r[fpu.id]['fiscal_printer_paper_state'] = 'ok'
-			else:
-				r[fpu.id]['fiscal_printer_paper_state'] = 'unknown'
+                if res.has_key('printer_state'):
+                        r[fpu.id]['fiscal_printer_paper_state'] = res['paper_state'] if 'paper_state' in res else 'unknown'
+                        r[fpu.id]['fiscal_printer_fiscal_state'] = res['fiscal_state'] if 'fiscal_state' in res else 'unknown'
+                        r[fpu.id]['fiscal_printer_state'] = res['printer_state'] if 'printer_state' in res else 'unknown'
+                        #r[fpu.id]['fiscal_printer_paper_state'] = res['slipHasPaper'] if 'slipHasPaper' in res else 'unknown'
+                        #r[fpu.id]['fiscal_printer_fiscal_state'] = res['strFiscalStatus'] if 'strFiscalStatus' in res else 'unknown'
+                else:
+                    if 'strFiscalStatus' in res:
+                            if 'Jornada fiscal cerrada' in res['strFiscalStatus']:
+                                r[fpu.id]['fiscal_printer_fiscal_state'] = 'close'
+                            else:
+                                if 'Jornada fiscal abierta' in res['strFiscalStatus']:
+                                    r[fpu.id]['fiscal_printer_fiscal_state'] = 'open'
+                                else:
+                                    r[fpu.id]['fiscal_printer_fiscal_state'] = 'unknown'
+                    #r[fpu.id]['fiscal_printer_state'] = res['strPrinterStatus'] if 'strPrinterStatus' in res else 'unknown'
+                    if 'strPrinterStatus' in res:
+                        if 'Online' in res['strPrinterStatus']:
+                            r[fpu.id]['fiscal_printer_state'] = 'ready'
+                        else:
+                            r[fpu.id]['fiscal_printer_state'] = 'offline'
+                    else:
+                        r[fpu.id]['fiscal_printer_state'] = 'unknown'
+
+                    if 'slipHasPaper' in res:
+                        r[fpu.id]['fiscal_printer_paper_state'] = 'ok'
+                    else:
+                        r[fpu.id]['fiscal_printer_paper_state'] = 'unknown'
 
         return r
 
@@ -135,7 +137,6 @@ class fiscal_printer_user(osv.AbstractModel):
                                                     ('unknown','Unknown'),
                                                 ], help="Check printer status."),
     }
-
 
     def make_fiscal_ticket(self, cr, uid, ids, ticket, context=None):
         """

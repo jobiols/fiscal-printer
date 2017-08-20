@@ -59,32 +59,32 @@ document_type_map = {
     "PASS":     "P",
     "LC":       "V",
     "LE":       "E",
-};
-
-responsability_map = {
-    "IVARI":  "I", # Inscripto, 
-    "IVARNI": "N", # No responsable, 
-    "RM":     "M", # Monotributista,
-    "IVAE":   "E", # Exento,
-    "NC":     "U", # No categorizado,
-    "CF":     "F", # Consumidor final,
-    "RMS":    "T", # Monotributista social,
-    "RMTIP":  "P", # Monotributista trabajador independiente promovido.
-    "1": "I", # Inscripto, 
-    "2": "N", # No responsable, 
-    "6": "M", # Monotributista,
-    "4": "E", # Exento,
-    "7": "U", # No categorizado,
-    "5": "F", # Consumidor final,
-    "13": "T", # Monotributista social,
 }
 
-class invoice(osv.osv):
-    """"""
-    
+responsability_map = {
+    "IVARI":    "I",  # Inscripto,
+    "IVARNI":   "N",  # No responsable,
+    "RM":       "M",  # Monotributista,
+    "IVAE":     "E",  # Exento,
+    "NC":       "U",  # No categorizado,
+    "CF":       "F",  # Consumidor final,
+    "RMS":      "T",  # Monotributista social,
+    "RMTIP":    "P",  # Monotributista trabajador independiente promovido.
+    "1":        "I",  # Inscripto,
+    "2":        "N",  # No responsable,
+    "6":        "M",  # Monotributista,
+    "4":        "E",  # Exento,
+    "7":        "U",  # No categorizado,
+    "5":        "F",  # Consumidor final,
+    "13":       "T",  # Monotributista social,
+}
+
+
+class Invoice(osv.osv):
+
     _name = 'account.invoice'
     _inherits = {  }
-    _inherit = [ 'account.invoice' ]
+    _inherit = ['account.invoice']
 
     def action_fiscal_printer(self, cr, uid, ids, context=None):
         picking_obj = self.pool.get('stock.picking')
@@ -95,14 +95,14 @@ class invoice(osv.osv):
             raise osv.except_osv(_(u'Cancelling Validation'),
                                  _(u'Please, validate one ticket at time.'))
             return False
-	
+
         for inv in self.browse(cr, uid, ids, context):
             if inv.journal_id.use_fiscal_printer:
-		if inv.amount_total > 999 and inv.partner_id.id == inv.journal_id.fiscal_printer_anon_partner_id.id:
-            		raise osv.except_osv(_(u'Cancelling Validation'),
-                                 _(u'No se pueden emitir tickets superiores a $1,000 a Consumidor Final.'))
+                if inv.amount_total > 999 and inv.partner_id.id == inv.journal_id.fiscal_printer_anon_partner_id.id:
+                    raise osv.except_osv(_(u'Cancelling Validation'),
+                             _(u'No se pueden emitir tickets superiores a $1,000 a Consumidor Final.'))
                 journal = inv.journal_id
-                ticket={
+                ticket = {
                     "turist_ticket": False,
                     "debit_note": False,
                     "partner": {
@@ -132,13 +132,14 @@ class invoice(osv.osv):
                     "tail_no_3": 0,
                     "tail_text_3": "",
                 }
-		if picking_obj:
-			ticket['related_document'] = (picking_obj.search_read(cr, uid, [('origin','=',inv.origin or '')], ["name"]) +\
-				 [{'name': _("No picking")}])[0]['name']	
-		else:
-			ticket['related_document'] = 'N/A'
-		if inv.origin:
-		    ticket['origin_document'] = inv.origin
+                if picking_obj:
+                    ticket['related_document'] = \
+                        (picking_obj.search_read(cr, uid, [('origin', '=', inv.origin or '')],
+                                                 ["name"]) + [{'name': _("No picking")}])[0]['name']
+                else:    
+                    ticket['related_document'] = 'N/A'
+                if inv.origin:
+                    ticket['origin_document'] = inv.origin
                 for line in inv.invoice_line:
                     ticket["lines"].append({
                         "item_action": "sale_item",
@@ -179,45 +180,55 @@ class invoice(osv.osv):
                         "taxes_rate": 0
                     })
 
-		#import pdb;pdb.set_trace()
-		if inv.type == 'out_invoice':	
-	                r = journal.make_fiscal_ticket(ticket)[inv.journal_id.id]
-		if inv.type == 'out_refund':
-			if 'payments' not in ticket.keys():
-				ticket['payments'] = [{
-					'extra_description': '',
-					'amount': inv.amount_total,
-					'type': 'pay',
-					'description': 'Cuenta corriente del cliente'
-					}]
-			if not ticket['debit_note']:
-				ticket['debit_note'] = ''
-			if not ticket['turist_ticket']:
-				ticket['turist_ticket'] = ''
-			if not ticket['current_account_automatic_pay']:
-				ticket['current_accountautomatic_pay'] = ''
-	                r = journal.make_fiscal_refund_ticket(ticket)[inv.journal_id.id]
+                #import pdb;pdb.set_trace()
+                if inv.type == 'out_invoice':	
+                    r = journal.make_fiscal_ticket(ticket)[inv.journal_id.id]
+                if inv.type == 'out_refund':
+                    if 'payments' not in ticket.keys():
+                        ticket['payments'] = [{
+                                'extra_description': '',
+                                'amount': inv.amount_total,
+                                'type': 'pay',
+                                'description': 'Cuenta corriente del cliente'
+                                }]
+                    if not ticket['debit_note']:
+                        ticket['debit_note'] = ''
+                    if not ticket['turist_ticket']:
+                        ticket['turist_ticket'] = ''
+                    if not ticket['current_account_automatic_pay']:
+                        ticket['current_accountautomatic_pay'] = ''
+                    r = journal.make_fiscal_refund_ticket(ticket)[inv.journal_id.id]
 
         if r and 'error' not in r:
-            #import pdb; pdb.set_trace()
-	    if r.has_key('document_number'):
-		nro_impreso = str(inv.journal_id.point_of_sale) + '-' + r['document_number'].zfill(8)
-		vals = {
-			'nro_ticket_impreso': nro_impreso
-			}
-		return_id = self.pool.get('account.invoice').write(cr,uid,inv.id,vals) 
+            #  import wdb; wdb.set_trace()
+            if 'document_number' in r:
+                nro_impreso = '{:0>4}-{:0>8}'.format(
+                        inv.journal_id.point_of_sale,
+                        r['document_number'])
+
+                vals = {
+                        'nro_ticket_impreso': nro_impreso
+                       }
+
+                if nro_impreso not in inv.document_number:
+                    raise osv.except_osv('Error de secuencia',
+                                         'Impresor fiscal {} / Odoo {}'.format(nro_impreso,
+                                                                               inv.document_number))
+
+
+
+                self.pool.get('account.invoice').write(cr, uid, inv.id, vals)
             return True
+
         elif r and 'error' in r:
-	    #import pdb;pdb.set_trace()
+            #import wdb;wdb.set_trace()
             raise osv.except_osv(_(u'Cancelling Validation'),
                                  _('Error: %s') % r['error'])
         else:
-	    if inv.journal_id.use_fiscal_printer:
-	            raise osv.except_osv(_(u'Cancelling Validation'),
-        	                         _(u'Unknown error.'))
-	    else:
-	            return True
-
-invoice()
+            if inv.journal_id.use_fiscal_printer:
+                raise osv.except_osv(_(u'Cancelling Validation'),
+                                     _(u'Unknown error.'))
+            else:
+                return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

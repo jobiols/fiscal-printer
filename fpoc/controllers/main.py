@@ -37,6 +37,7 @@ from Queue import Queue, Full, Empty
 import logging
 
 _logger = logging.getLogger(__name__)
+#TODO Quitar esto cuando funcione
 _logger.setLevel('DEBUG')
 
 # jinegconpkicmfefahjgkpinkgoabnme
@@ -55,10 +56,11 @@ timeout = 5
 # Monkey path for HttpRequest
 http_old_dispatch = oeweb.HttpRequest.dispatch
 
+
 def http_dispatch(self):
     r = http_old_dispatch(self)
     if hasattr(r, 'headers'):
-        r.headers._list.append(('Access-Control-Allow-Origin',access_control_allow_origin))
+        r.headers._list.append(('Access-Control-Allow-Origin', access_control_allow_origin))
         r.headers._list.append(('Access-Control-Allow-Credentials', 'true'))
     return r
 
@@ -71,7 +73,7 @@ json_old_dispatch = oeweb.JsonRequest.dispatch
 def json_dispatch(self):
     r = json_old_dispatch(self)
     if hasattr(r, 'headers'):
-        r.headers._list.append(('Access-Control-Allow-Origin',access_control_allow_origin))
+        r.headers._list.append(('Access-Control-Allow-Origin', access_control_allow_origin))
         r.headers._list.append(('Access-Control-Allow-Credentials', 'true'))
     return r
 
@@ -89,10 +91,10 @@ def connection_dropped(self, error, environ=None):
     """
     path = environ.get('PATH_INFO', None)
     if path and path == '/fp/spool':
-        q = parse_qs('&'.join([environ.get('QUERY_STRING',''),
+        q = parse_qs('&'.join([environ.get('QUERY_STRING', ''),
                                environ.get('HTTP_COOKIE', '')]))
-        sid = q.get('session_id',[''])[0]
-        pid = q.get('printer_id',[''])[0]
+        sid = q.get('session_id', [''])[0]
+        pid = q.get('printer_id', [''])[0]
         qid = "%s:%s" % (sid, pid)
         if qid in event_hub:
             del event_hub[qid]
@@ -131,13 +133,13 @@ def do_event(event, data={}, session_id=None, printer_id=None, control=False):
     # Select target of queue. Control go to Chrome Application, else take printers.
     # All control queue end with ':'.
     if control:
-        qids = [ session_id ] if session_id else [ qid for qid in event_hub.keys() if qid[-1] == ':']
+        qids = [session_id] if session_id else [qid for qid in event_hub.keys() if qid[-1] == ':']
     else:
         qid = ':'.join([session_id or '', printer_id or ''])
-        qids = [ qid ] if qid != ':' else event_hub.keys()
-        qids = [ qid for qid in qids if qid in event_hub.keys() and qid[-1] != ':' ]
+        qids = [qid] if qid != ':' else event_hub.keys()
+        qids = [qid for qid in qids if qid in event_hub.keys() and qid[-1] != ':']
 
-    _logger.debug("Send message '%s' to spools: %s" % (event, qids))
+    _logger.debug("Send message NUMERO UNO '%s' to spools: %s" % (event, qids))
 
     for qid in qids:
         event_event[event_id] = threading.Event()
@@ -145,13 +147,13 @@ def do_event(event, data={}, session_id=None, printer_id=None, control=False):
         event_hub[qid].put(item)
         w = event_event[event_id].wait(300)
         if not w: raise osv.except_osv(_('Error!'), _('Timeout happen!!'))
-        _logger.debug("Return '%s': %s" % (qids, w))
+        _logger.debug("Return NUMERO UNO '%s': %s" % (qids, w))
         result[qid] = event_result[event_id]
         event_hub[qid].task_done()
 
-    _logger.debug("Result from '%s' was: %s" % (qids, result))
+    _logger.debug("Result from NUMERO UNO '%s' was: %s" % (qids, result))
 
-    return [ result[qid] for qid in qids if qid in result ]
+    return [result[qid] for qid in qids if qid in result]
 
 
 def do_return(req, result):
@@ -242,7 +244,7 @@ class FiscalPrinterController(oeweb.Controller):
         while True:
             try:
                 message = event_hub[qid].get(timeout=timeout)
-                _logger.debug("Send message %s to %s" % (message['event'], qid))
+                _logger.debug("Send message NUMERO DOS %s to %s" % (message['event'], qid))
                 yield 'event: %(event)s\ndata: %(data)s\nid: %(id)s\n\n' % message
             except Empty:
                 # Force check status.

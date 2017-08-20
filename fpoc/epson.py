@@ -30,6 +30,7 @@ from datetime import datetime
 import logging
 
 _logger = logging.getLogger(__name__)
+#TODO Quitar esto cuando funcione
 _logger.setLevel('DEBUG')
 
 _schema = logging.getLogger(__name__ + '.schema')
@@ -60,10 +61,10 @@ class epson_ar_fiscal_printer(osv.osv):
                 for fn in field_name:
                     if fn in attrs:
                         if fn in ['tasaIVA', 'maxMonto']:
-			    try:
-	                            r[fp.id][fn] = float(attrs[fn])/100.
-			    except:
-	                            r[fp.id][fn] = 0
+                            try:
+                                r[fp.id][fn] = float(attrs[fn])/100.
+                            except:
+                                r[fp.id][fn] = 0
                         elif fn in ['fechaFiscalizacion']:
                             line = attrs[fn]
                             r[fp.id][fn] = "20{2}-{1}-{0}".format(*[line[i:i+2] for i in range(0, len(line), 2)])

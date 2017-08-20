@@ -50,7 +50,7 @@
             <field name="target"></field>
         </record>
 
-        <menuitem id="menu_fp_config" name="Fiscal Printers" parent="base.menu_config" sequence="40"/>
+        <menuitem id="menu_fp_config" name="Fiscal Printers" parent="account.menu_finance_configuration" sequence="10"/>
 
         <menuitem id="menu_disconnected" name="Disconnected" parent="menu_fp_config" sequence="10"
             action="action_disconnected_fiscal_printers"
