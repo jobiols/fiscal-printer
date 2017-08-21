@@ -47,7 +47,6 @@ class fiscal_printer_configuration(osv.osv):
         """
         return status
 
-fiscal_printer_configuration()
 
 
 class fiscal_printer_user(osv.AbstractModel):

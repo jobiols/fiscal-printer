@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 {
     'active': False,
-    'author': 'Moldeo Interactive',
+    'author': 'Moldeo Interactive, jeo Software',
     'category': 'base.module_category_hidden',
     'demo_xml': [],
-    'depends': ['account', 'fpoc', 'l10n_ar_invoice'],
+    'depends': ['account', 'fpoc', 'l10n_ar_invoice', 'l10n_ar_afipws_fe'],
     'name': 'Fiscal Printer on the Cloud support for Argentina Localization',
     'description': '___',
     'init_xml': [],

@@ -10,6 +10,7 @@ _logger.setLevel('DEBUG')
 
 _schema = logging.getLogger(__name__ + '.schema')
 
+
 class account_journal(osv.osv):
 
     def _get_fp_items_generated(self, cr, uid, ids, fields_name, arg, context=None):

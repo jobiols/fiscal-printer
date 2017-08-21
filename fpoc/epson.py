@@ -38,6 +38,7 @@ _schema = logging.getLogger(__name__ + '.schema')
 _header_lines = ['headerLine 1', 'headerLine 2', 'headerLine 3', 'headerLine 4', 'headerLine 5', 'headerLine 6', 'headerLine 7']
 _footer_lines = ['footerLine 1', 'footerLine 2', 'footerLine 3', 'footerLine 4', 'footerLine 5', 'footerLine 6', 'footerLine 7']
 
+
 class epson_ar_fiscal_printer(osv.osv):
     """
     The fiscal printer entity.
@@ -109,6 +110,7 @@ class epson_ar_fiscal_printer(osv.osv):
     }
 
 epson_ar_fiscal_printer()
+
 
 class epson_ar_fiscal_tf_printer_configuration(osv.osv):
     """
@@ -207,6 +209,5 @@ class epson_ar_fiscal_tf_printer_configuration(osv.osv):
         return r
 
 
-epson_ar_fiscal_tf_printer_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

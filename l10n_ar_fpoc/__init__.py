@@ -20,9 +20,7 @@
 #
 ##############################################################################
 
-import ra_fixes_models
-import invoice
-import journal
+import models
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {   'active': False,
-    'author': 'Moldeo Interactive',
+    'author': 'Moldeo Interactive, jeo Software',
     'category': 'base.module_category_hidden',
     'depends': [],
     'description': 'Fiscal Printer on the Cloud',

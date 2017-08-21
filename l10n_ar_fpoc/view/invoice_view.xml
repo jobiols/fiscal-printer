@@ -1,9 +1,9 @@
 <openerp>
     <data>
 
-        <record id="view_invoice_form" model="ir.ui.view">
+        <record id="view_invoice_form_fpoc" model="ir.ui.view">
             <field name="model">account.invoice</field>
-            <field name="name">account.invoice.afip.form</field>
+            <field name="name">account.invoice.form.fpoc</field>
             <field name="inherit_id" ref="account.invoice_form"/>
 
             <!-- we want this view to be loaded after invoice operation view if installed -->
@@ -11,24 +11,18 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
 
-                <!-- TODO ver si es necesario cambiar este contexto o no
-                <field name="invoice_line" position="attributes">
-                    <attribute name="context">{'partner_id': partner_id, 'price_type': context.get('price_type') or False, 'type': type}" name="invoice_line" on_change="onchange_invoice_line(invoice_line)</attribute>
-                </field>
-                -->
+                <!-- cambiar el nombre del boton validar para mejorar usabilidad -->
 
-                <!-- we change button labels for better usability
-                <button name="invoice_open" position="attributes">
-                    <attribute name="attrs">{'invisible': ['|', ('state', '!=', 'draft'), ('validation_type', '!=', False)]}</attribute>
-                    <attribute name="states"></attribute>
-                </button>
-                -->
                 <button name="invoice_open" position="after">
-                    <button name="invoice_open" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('validation_type', '!=', 'fiscal_controller')]}" string="Validar en CONTROLADOR FISCAL" class="oe_highlight" groups="base.group_user"/>
+                    <button name="invoice_open"
+                            attrs="{'invisible': ['|',
+                                        ('state', '!=', 'draft'),
+                                        ('validation_type', '!=', 'fiscal_controller')]}"
+                            string="Validar en CONTROLADOR FISCAL"
+                            class="oe_highlight"
+                            groups="base.group_user"/>
                 </button>
-
             </field>
         </record>
-
     </data>
 </openerp>
