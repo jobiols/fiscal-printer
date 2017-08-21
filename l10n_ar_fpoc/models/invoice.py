@@ -19,9 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
-from openerp import netsvc
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
@@ -86,8 +83,14 @@ class Invoice(osv.osv):
     _inherit = ['account.invoice']
 
     def get_validation_type(self, cr, uid, ids, context=None):
+        """ detectar cuando el journal esta asociado a una impresora fiscal para poner luego el boton correcto
+        """
+        super(Invoice, self).get_validation_type(cr, uid, ids, context)
+
         for inv in self.browse(cr, uid, ids, context):
-            inv.validation_type = 'fiscal_controller'
+            if not inv.validation_type and inv.journal_id.fiscal_printer_id:
+                inv.validation_type = 'fiscal_controller'
+
 
     def action_fiscal_printer(self, cr, uid, ids, context=None):
         picking_obj = self.pool.get('stock.picking')
@@ -216,6 +219,7 @@ class Invoice(osv.osv):
                 if nro_impreso not in inv.document_number:
                     raise osv.except_osv('Error de secuencia',
                                          'Impresor fiscal {} / Odoo {}'.format(nro_impreso,
+                                                                               inv.document_number))
 
                 self.pool.get('account.invoice').write(cr, uid, inv.id, vals)
             return True
