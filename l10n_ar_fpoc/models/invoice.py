@@ -82,6 +82,44 @@ class Invoice(osv.osv):
     _inherits = {  }
     _inherit = ['account.invoice']
 
+    def check_counters(self, cr, uid, ids, res, context=None):
+        """ Verificar que las secuencias son correctas o generar una excepcion
+        """
+        #  import wdb;wdb.set_trace()
+        FA = res[1]['last_a_sale_document']
+        NA = res[1]['last_a_credit_document']
+        FB = res[1]['last_b_sale_document']
+        NB = res[1]['last_b_credit_document']
+
+        for inv in self.browse(cr, uid, ids, context):
+            if inv.type == 'out_invoice':
+                if inv.journal_document_class_id.afip_document_class_id.document_letter_id.name == 'A':
+                    next_number = int(FA) + 1
+                if inv.journal_document_class_id.afip_document_class_id.document_letter_id.name == 'B':
+                    next_number = int(FB) + 1
+            if inv.type == 'out_refund':
+                if inv.journal_document_class_id.afip_document_class_id.document_letter_id.name == 'A':
+                    next_number = int(NA) + 1
+                if inv.journal_document_class_id.afip_document_class_id.document_letter_id.name == 'B':
+                    next_number = int(NB) + 1
+
+            if next_number != inv.next_invoice_number:
+                raise osv.except_osv(u'Error de secuencia',
+                                     'Proximo numero Odoo {} - Proximo numero Controlador Fiscal {}'.format(
+                                         inv.next_invoice_number,
+                                         next_number)
+                                     )
+
+    def action_number(self, cr, uid, ids, context=None):
+        """ sobreescribir action_number para chequear las secuencias antes de mandar a imprimir el ticket
+        """
+        for inv in self.browse(cr, uid, ids, context):
+            if inv.validation_type == 'fiscal_controller':
+                res = inv.journal_id.fiscal_printer_id.get_counters()
+                self.check_counters(cr, uid, ids, res, context)
+
+        super(Invoice, self).action_number(cr, uid, ids, context)
+
     def get_validation_type(self, cr, uid, ids, context=None):
         """ detectar cuando el journal esta asociado a una impresora fiscal para poner luego el boton correcto
         """
@@ -211,16 +249,9 @@ class Invoice(osv.osv):
                 nro_impreso = '{:0>4}-{:0>8}'.format(
                         inv.journal_id.point_of_sale,
                         r['document_number'])
-
                 vals = {
                         'nro_ticket_impreso': nro_impreso
                        }
-
-                if nro_impreso not in inv.document_number:
-                    raise osv.except_osv('Error de secuencia',
-                                         'Impresor fiscal {} / Odoo {}'.format(nro_impreso,
-                                                                               inv.document_number))
-
                 self.pool.get('account.invoice').write(cr, uid, inv.id, vals)
             return True
 

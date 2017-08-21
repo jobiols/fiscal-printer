@@ -21,7 +21,7 @@ class account_journal(osv.osv):
             fp = jou.fiscal_printer_id
             res = fp.get_counters() if fp else False
             if res and res[fp.id]:
-                if jou.journal_class_id.afip_code == 1: 
+                if jou.journal_class_id.afip_code == 1:
                     r[jou.id] = res[fp.id].get('last_a_sale_document_completed',0)
                 elif jou.journal_class_id.afip_code in [ 6, 11 ]:
                     r[jou.id] = res[fp.id].get('last_b_sale_document_completed',0)
