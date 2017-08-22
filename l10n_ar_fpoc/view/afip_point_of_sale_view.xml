@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_afip_point_of_sale_form_fpoc" model="ir.ui.view">
+            <field name="name">afip.point_of_sale.form.fpoc</field>
+            <field name="model">afip.point_of_sale</field>
+            <field name="inherit_id" ref="l10n_ar_invoice.view_afip_point_of_sale_form"/>
+            <field name="arch" type="xml">
+                <header>
+                    <button name="check_document_local_controller_number"
+                            string="Chequear numeros Controlador/Local"
+                            help="Chequear los numeros de documento locales contra los del controlador"
+                            type="object"
+                            attrs="{'invisible':[('type', '!=', 'fiscal_controller')]}"/>
+                </header>
+            </field>
+        </record>
+
+    </data>
+</openerp>
