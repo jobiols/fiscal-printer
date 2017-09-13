@@ -82,14 +82,14 @@ class Invoice(osv.osv):
     _inherits = {  }
     _inherit = ['account.invoice']
 
-    def check_counters(self, cr, uid, ids, res, context=None):
+    def check_counters(self, cr, uid, ids, sequences, context=None):
         """ Verificar que las secuencias son correctas o generar una excepcion
         """
-        #  import wdb;wdb.set_trace()
-        FA = res[1]['last_a_sale_document']
-        NA = res[1]['last_a_credit_document']
-        FB = res[1]['last_b_sale_document']
-        NB = res[1]['last_b_credit_document']
+        # import wdb;wdb.set_trace()
+        FA = sequences['last_a_sale_document']
+        NA = sequences['last_a_credit_document']
+        FB = sequences['last_b_sale_document']
+        NB = sequences['last_b_credit_document']
 
         for inv in self.browse(cr, uid, ids, context):
             if inv.type == 'out_invoice':
@@ -116,7 +116,8 @@ class Invoice(osv.osv):
         for inv in self.browse(cr, uid, ids, context):
             if inv.validation_type == 'fiscal_controller':
                 res = inv.journal_id.fiscal_printer_id.get_counters()
-                self.check_counters(cr, uid, ids, res, context)
+                sequences = res[inv.journal_id.fiscal_printer_id.id]
+                self.check_counters(cr, uid, ids, sequences, context)
 
         super(Invoice, self).action_number(cr, uid, ids, context)
 
@@ -128,7 +129,6 @@ class Invoice(osv.osv):
         for inv in self.browse(cr, uid, ids, context):
             if not inv.validation_type and inv.journal_id.fiscal_printer_id:
                 inv.validation_type = 'fiscal_controller'
-
 
     def action_fiscal_printer(self, cr, uid, ids, context=None):
         picking_obj = self.pool.get('stock.picking')

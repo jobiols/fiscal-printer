@@ -20,6 +20,7 @@
 #
 ##############################################################################
 from openerp import tools, models, fields, api, _
+from openerp.exceptions import Warning
 
 
 class AfipPointOfSale(models.Model):
@@ -27,8 +28,11 @@ class AfipPointOfSale(models.Model):
 
     @api.multi
     def check_document_local_controller_number(self):
-        msg = ''
+        #import wdb;wdb.set_trace()
+        raise Warning('No esta implementado')
         return
+
+        #TODO Aca hay que implementar un get_fiscal_printer_last_invoice()
 
         for j_document_class in self.journal_document_class_ids.filtered(
                 lambda r: r.journal_id.type in ['sale', 'sale_refund']):
