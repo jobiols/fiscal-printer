@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+##############################################################################
+# For copyright and license notices, see __openerp__.py file in module root
+# directory
+##############################################################################
+
 from openerp import netsvc
 from openerp.osv import osv, fields
 from openerp.tools.translate import _

@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+##############################################################################
+# For copyright and license notices, see __openerp__.py file in module root
+# directory
+##############################################################################
 
 import fiscal_printer
 import fiscal_printer_user
 import wizard
-import report
 import controllers
 import epson
 

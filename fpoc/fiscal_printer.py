@@ -1,23 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
-#    fiscal_printer
-#    Copyright (C) 2014 No author.
-#    No email
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+# For copyright and license notices, see __openerp__.py file in module root
+# directory
 ##############################################################################
 
 import re
@@ -248,7 +232,7 @@ class FiscalPrinter(osv.osv):
         for fp in self.browse(cr, uid, ids):
             try:
                 event_result = do_event('get_status', {'name': fp.name},
-                     session_id=fp.session_id, printer_id=fp.name)
+                                        session_id=fp.session_id, printer_id=fp.name)
             except DenialService, m:
                 raise osv.except_osv(_('Connectivity Error'), m)
             r[fp.id] = event_result.pop() if event_result else False
@@ -258,7 +242,7 @@ class FiscalPrinter(osv.osv):
         r = {}
         for fp in self.browse(cr, uid, ids):
             event_result = do_event('get_counters', {'name': fp.name},
-                     session_id=fp.session_id, printer_id=fp.name)
+                                    session_id=fp.session_id, printer_id=fp.name)
             r[fp.id] = event_result.pop() if event_result else False
         return r
 
