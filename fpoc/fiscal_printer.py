@@ -4,8 +4,6 @@
 # directory
 ##############################################################################
 
-import re
-from openerp import netsvc
 from openerp import tools, models, fields, api, _
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
@@ -17,8 +15,6 @@ from openerp.addons.fpoc.controllers.main import DenialService
 
 import logging
 _logger = logging.getLogger(__name__)
-#TODO Quitar esto cuando funcione
-_logger.setLevel('DEBUG')
 
 
 class FiscalPrinterDisconnected(osv.TransientModel):

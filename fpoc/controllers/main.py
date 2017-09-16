@@ -21,8 +21,6 @@ from Queue import Queue, Full, Empty
 import logging
 
 _logger = logging.getLogger(__name__)
-#TODO Quitar esto cuando funcione
-_logger.setLevel('DEBUG')
 
 # jinegconpkicmfefahjgkpinkgoabnme
 # access_control_allow_origin = 'chrome-extension://gileacnnoefamnjnhjnijommagpamona'

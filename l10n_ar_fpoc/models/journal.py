@@ -4,14 +4,10 @@
 # directory
 ##############################################################################
 
-from openerp import netsvc
 from openerp.osv import osv, fields
 import logging
 
 _logger = logging.getLogger(__name__)
-#TODO quitar esto cuando funcione
-_logger.setLevel('DEBUG')
-
 _schema = logging.getLogger(__name__ + '.schema')
 
 

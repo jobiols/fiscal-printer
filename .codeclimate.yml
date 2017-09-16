@@ -17,8 +17,6 @@ engines:
       - python:
 ratings:
   paths:
-  - app/**
-  - lib/**
   - "**.py"
 exclude_paths:
-- doc/**
+  - doc/**
