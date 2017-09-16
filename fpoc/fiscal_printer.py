@@ -233,7 +233,7 @@ class FiscalPrinter(osv.osv):
             try:
                 event_result = do_event('get_status', {'name': fp.name},
                                         session_id=fp.session_id, printer_id=fp.name)
-            except DenialService, m:
+            except DenialService as m:
                 raise osv.except_osv(_('Connectivity Error'), m)
             r[fp.id] = event_result.pop() if event_result else False
         return r
