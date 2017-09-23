@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2017  jeo Software  (http://www.jeosoft.com.ar)
+#    Copyright (C) 2014 Moldeo interactive
+#                  2017 jeo Software  (http://www.jeosoft.com.ar)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
