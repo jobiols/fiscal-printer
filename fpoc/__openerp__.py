@@ -19,14 +19,12 @@
 ##############################################################################
 
 {
-    'active': False,
     'author': 'Moldeo Interactive, jeo Software',
     'category': 'base.module_category_hidden',
     'depends': [
         'account'
     ],
     'description': 'Fiscal Printer on the Cloud',
-    'installable': True,
     'license': 'AGPL-3',
     'name': 'Fiscal Printer on the Cloud',
     'test': [
@@ -38,6 +36,9 @@
         u'security/fiscal_printer_group.xml',
         u'security/ir.model.access.csv'],
     'version': '0.1',
-    'website': 'https://github.com/csrocha/odoo_fpoc'}
+    'website': 'https://github.com/csrocha/odoo_fpoc',
+    'installable': True,
+    'active': False,
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

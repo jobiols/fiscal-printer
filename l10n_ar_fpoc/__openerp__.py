@@ -20,7 +20,6 @@
 ##############################################################################
 
 {
-    'active': False,
     'author': 'Moldeo Interactive, jeo Software',
     'category': 'base.module_category_hidden',
     'demo_xml': [],
@@ -34,7 +33,6 @@
     'name': 'Fiscal Printer on the Cloud support for Argentina Localization',
     'description': '___',
     'init_xml': [],
-    'installable': True,
     'license': 'AGPL-3',
     'test': [],
     'data': [
@@ -49,6 +47,8 @@
     'css': [],
     'qweb': [],
     'version': '0.1',
-    'website': ''
+    'website': '',
+    'installable': True
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
