@@ -13,6 +13,11 @@
                             help="Chequear los numeros de documento locales contra los del controlador"
                             type="object"
                             attrs="{'invisible':[('type', '!=', 'fiscal_controller')]}"/>
+                    <button name="sync_document_local_remote_number"
+                            string="Sincronizar numeros Controlador/Local"
+                            help="Sincronizar los numeros de documento locales para igualar los del controlador"
+                            type="object"
+                            attrs="{'invisible':[('type', '!=', 'fiscal_controller')]}"/>
                 </header>
             </field>
         </record>
