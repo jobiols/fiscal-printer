@@ -29,9 +29,9 @@
 
         <menuitem id="menu_fp_config"
                   name="Impresoras Fiscales"
-                  parent="account.menu_finance_configuration"
+                  parent="account.menu_finance_receivables"
                   groups="group_fiscal_printers_admin"
-                  sequence="10"/>
+                  sequence="600"/>
 
         <menuitem id="menu_disconnected"
                   name="Desconectadas"
