@@ -69,10 +69,14 @@ class Invoice(osv.osv):
         """ Verificar que las secuencias son correctas o generar una excepcion
         """
         # import wdb;wdb.set_trace()
-        FA = sequences['last_a_sale_document']
-        NA = sequences['last_a_credit_document']
-        FB = sequences['last_b_sale_document']
-        NB = sequences['last_b_credit_document']
+        try:
+            FA = sequences['last_a_sale_document']
+            NA = sequences['last_a_credit_document']
+            FB = sequences['last_b_sale_document']
+            NB = sequences['last_b_credit_document']
+        except:
+            raise osv.except_osv(u'Error de conexión con el controlador fiscal',
+                                 u'Verifique que el controlador esté online y conectado')
 
         for inv in self.browse(cr, uid, ids, context):
             if inv.type == 'out_invoice':
