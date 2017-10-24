@@ -20,10 +20,14 @@ class AfipPointOfSale(models.Model):
         if not sequences:
             raise Warning('No hay impresoras conectadas')
 
-        FA = int(sequences['last_a_sale_document'])
-        NA = int(sequences['last_a_credit_document'])
-        FB = int(sequences['last_b_sale_document'])
-        NB = int(sequences['last_b_credit_document'])
+        try:
+            FA = sequences['last_a_sale_document']
+            NA = sequences['last_a_credit_document']
+            FB = sequences['last_b_sale_document']
+            NB = sequences['last_b_credit_document']
+        except:
+            raise osv.except_osv(u'Error de conexión con el controlador fiscal',
+                                 u'Verifique que el controlador esté online y conectado')
 
         for j_document_class in self.journal_document_class_ids.filtered(
                 lambda r: r.journal_id.type in ['sale', 'sale_refund']):
