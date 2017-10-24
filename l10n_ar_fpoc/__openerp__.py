@@ -46,7 +46,7 @@
     'js': [],
     'css': [],
     'qweb': [],
-    'version': '0.1',
+    'version': '8.0.1.0',
     'website': '',
     'installable': True,
     'active': False,

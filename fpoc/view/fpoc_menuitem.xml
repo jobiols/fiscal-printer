@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <record id="action_fiscal_printer_fiscal_printer_fiscal_printers" model="ir.actions.act_window">
-            <field name="name">Fiscal Printers</field>
+            <field name="name">Impresoras fiscales conectadas</field>
             <field name="res_model">fpoc.fiscal_printer</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -20,27 +20,40 @@
         </record>
 
         <record id="action_disconnected_fiscal_printers" model="ir.actions.act_window">
-            <field name="name">Disconnected Fiscal Printers</field>
+            <field name="name">Impresoras fiscales desconectadas</field>
             <field name="res_model">fpoc.disconnected</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
             <field name="target"></field>
         </record>
 
-        <menuitem id="menu_fp_config" name="Fiscal Printers" parent="account.menu_finance_configuration" sequence="10"/>
+        <menuitem id="menu_fp_config"
+                  name="Impresoras Fiscales"
+                  parent="account.menu_finance_configuration"
+                  groups="group_fiscal_printers_admin"
+                  sequence="10"/>
 
-        <menuitem id="menu_disconnected" name="Disconnected" parent="menu_fp_config" sequence="10"
+        <menuitem id="menu_disconnected"
+                  name="Desconectadas"
+                  parent="menu_fp_config"
+                  sequence="10"
             action="action_disconnected_fiscal_printers"
             />
 
-        <menuitem id="menu_fiscal_printers" name="Fiscal Printers" parent="menu_fp_config" sequence="20"
+        <menuitem id="menu_fiscal_printers"
+                  name="Conectadas"
+                  parent="menu_fp_config"
+                  sequence="20"
             action="action_fiscal_printer_fiscal_printer_fiscal_printers"
             />
-
-        <menuitem id="menu_fiscal_printer_configurations" name="Fiscal Configurations" parent="menu_fp_config" sequence="30"
+<!--
+        <menuitem id="menu_fiscal_printer_configurations"
+                  name="Configuracion"
+                  parent="menu_fp_config"
+                  sequence="30"
             action="action_fiscal_printer_configuration"
             />
-
+-->
     </data>
 </openerp>
 
