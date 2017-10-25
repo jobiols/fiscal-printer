@@ -15,7 +15,7 @@ from openerp.addons.fpoc.controllers.main import DenialService
 
 import logging
 _logger = logging.getLogger(__name__)
-
+#_logger.setLevel(logging.DEBUG)
 
 class FiscalPrinterDisconnected(osv.TransientModel):
     """

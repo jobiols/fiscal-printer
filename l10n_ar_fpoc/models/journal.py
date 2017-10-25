@@ -9,6 +9,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
+#_logger.setLevel(logging.DEBUG)
 
 
 class account_journal(osv.osv):

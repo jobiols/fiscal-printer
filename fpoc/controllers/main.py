@@ -21,6 +21,7 @@ from Queue import Queue, Full, Empty
 import logging
 
 _logger = logging.getLogger(__name__)
+#_logger.setLevel(logging.DEBUG)
 
 # jinegconpkicmfefahjgkpinkgoabnme
 # access_control_allow_origin = 'chrome-extension://gileacnnoefamnjnhjnijommagpamona'
