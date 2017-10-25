@@ -187,7 +187,7 @@ class Invoice(osv.osv):
                         "item_description": line.name,
                         "quantity": line.quantity,
                         "unit_price": line.price_unit,
-                        "vat_rate": line.product_id.tax_rate * 100,
+                        "vat_rate": line.invoice_line_tax_id.amount * 100,
                         "fixed_taxes": 0,
                         "taxes_rate": 0
                     })
@@ -211,7 +211,18 @@ class Invoice(osv.osv):
                         "taxes_rate": 0
                     })
 
-                #import pdb;pdb.set_trace()
+
+                #TODO Quitar esto cuando ande bien.
+                print '-----------------------------------------'
+                for line in ticket['lines']:
+                    print '{:12.2f} IVA {:.2f}% {:2.0f}Un {}'.format(
+                            line['unit_price'],
+                            line['vat_rate'],
+                            line['quantity'],
+                            line['item_description'])
+                print '-----------------------------------------'
+
+                #import wdb;wdb.set_trace()
                 if inv.type == 'out_invoice':	
                     r = journal.make_fiscal_ticket(ticket)[inv.journal_id.id]
                 if inv.type == 'out_refund':
