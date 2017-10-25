@@ -54,6 +54,15 @@
             action="action_fiscal_printer_configuration"
             />
 -->
+
+        <!-- mover este menu para que el usuario de fiscal printer pueda ver loo numeros de secuencia -->
+
+        <menuitem name="Point Of Sales"
+                  action="l10n_ar_invoice.act_afip_point_of_sale"
+                  id="l10n_ar_invoice.menu_action_afip_point_of_sale"
+                  sequence="10"
+                  parent="menu_fp_config"/>
+
     </data>
 </openerp>
 
