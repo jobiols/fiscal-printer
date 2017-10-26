@@ -52,7 +52,6 @@ class fiscal_printer_configuration(osv.osv):
         return status
 
 
-
 class fiscal_printer_user(osv.AbstractModel):
     """
     Fiscal printer user is a Abstract class to be used by the owner of the fiscal printer.

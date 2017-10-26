@@ -1,0 +1,175 @@
+@startuml
+
+' fiscal_printer.py
+
+class fpoc_disconnected {
+    name: fields.char
+    protocol: fields.char
+    model: fields.char
+    serialNumber: fields.char
+    session_id: fields.char
+}
+fpoc_disconnected "user_id" --o res.users
+
+class fpoc_fiscal_printer {
+    name: fields.char
+    protocol: fields.char
+    model: fields.char
+    serialNumber: fields.char
+    lastUpdate: fields.datetime
+    printerStatus: fields.function
+    fiscalStatus:  fields.function
+    clock:         fields.function
+    session_id: fields.char
+}
+
+class fpoc_configuration
+class account_journal
+
+
+epson_fpoc_fiscal_printer --> fpoc_fiscal_printer
+
+class epson_fpoc_fiscal_printer {
+    header: fields.function(
+    footer: fields.function(
+    razonSocial: fields.function(
+    cuit: fields.function(
+    caja: fields.function(
+    ivaResponsabilidad: fields.function(
+    calle: fields.function(
+    numero: fields.function(
+    piso: fields.function(
+    depto: fields.function(
+    localidad: fields.function(
+    cpa: fields.function(
+    provincia: fields.function(
+    tasaIVA: fields.function(
+    maxMonto: fields.function(
+    fechaFiscalizacion: fields.function(
+}
+
+class fpoc_user {
+    fiscal_printer_fiscal_state': fields.function(
+    fiscal_printer_paper_state': fields.function(
+    fiscal_printer_state': fields.function(
+
+}
+
+fpoc_user   o-- "fiscal_printer_anon_parnter_id" res_partner
+fpoc_user   o-- "fiscal_printer_configuration_id" fpoc_configuration
+fpoc_user   o-- "fiscal_printer_id" fpoc_fiscal_printer
+
+
+/'
+
+
+class ir.needaction_mixin
+class res.partner
+
+class res.users
+res.users o-- "user_id" registration
+
+class res.company
+res.company o-- "company_id" registration
+
+class account.invoice
+account.invoice o-- "invoice_id" quota
+
+class email.template
+email.template o-- "template_id" mails_to_send
+class product.product
+product.product o-- "product_id" mails_to_send
+product.product o-- "product_id" lecture_template
+
+class diary
+
+curso -u--> ir.needaction_mixin
+curso -u--> mail.thread
+class curso {
+
+    child:Boolean
+    allow_overclass:Boolean
+    instance:Integer
+    date_begin:Date
+    date_end:Date
+    reply_to:Char
+    note:Text
+    register_max:Integer
+    register_min:Integer
+    register_attended:Integer
+    register_current:Integer
+    register_avail:Integer
+    register_prospect:Integer
+    register_cancel:Integer
+    register_virtual:Integer
+    is_subscribed:Boolean
+    classes_per_week:Integer
+    curso_instance:Char
+    name:Char
+    no_lectures:Char
+    state:Selction
+    tot_hs_lecture:Integer
+    list_price:Float
+    hs_lecture:Integer
+    default_code:Char
+    no_quotes:Integer
+    next:Boolean
+    error:Char
+}
+curso "registration_ids" *-r- "curso_id" registration
+curso "diary_ids" *-l- "curso_id" diary
+curso "lecture_ids" *--- "curso_id" lecture
+curso "parent_curso_id" o-- curso
+
+registration -u-> mail.thread
+registration -u-> ir.needaction_mixin
+class registration {
+    create_date:Date
+    date_closed:Date
+    date_open:Date
+    discount:Float
+    disc_desc:Char
+    nb_register:Integer
+    state:Selection
+    reply_to:Char
+    curso_begin_date:Date
+    email:Char
+    phone:Char
+    curso_state:Selection
+    curso_begin_day:Char
+    source:fields.Selection
+}
+registration "quota_id" *--- "registration_id" quota
+registration "log_ids" o-- mail.message
+
+class lecture
+lecture "assistance_id" *--- "lecture_id" assistance
+
+class lecture_template
+class quota
+
+schedule -u-> lapse
+class schedule
+schedule o--- "schedule" diary
+schedule o-- "schedule_id" lecture
+
+partner -u-> res.partner
+class partner
+partner "assistance_id" *-- "partner_id" assistance
+partner "curso_registration_ids" *-- "partner_id" registration
+
+
+
+
+class assistance
+class mails_to_send
+class html_filter
+
+lapse -u-> holiday
+class lapse
+
+class holiday
+'/
+
+
+@enduml

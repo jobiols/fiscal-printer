@@ -62,8 +62,7 @@ responsability_map = {
 
 class Invoice(osv.osv):
 
-    _name = 'account.invoice'
-    _inherit = ['account.invoice']
+    _inherit = 'account.invoice'
 
     def check_counters(self, cr, uid, ids, sequences, context=None):
         """ Verificar que las secuencias son correctas o generar una excepcion
