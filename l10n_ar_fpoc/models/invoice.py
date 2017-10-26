@@ -9,59 +9,58 @@ from openerp.tools.translate import _
 _vat = lambda x: x.tax_code_id.parent_id.name == 'IVA'
 
 document_type_map = {
-    "DNI":      "D",
-    "CUIL":     "L",
-    "CUIT":     "T",
-    "CPF":      "C",
-    "CIB":      "C",
-    "CIK":      "C",
-    "CIX":      "C",
-    "CIW":      "C",
-    "CIE":      "C",
-    "CIY":      "C",
-    "CIM":      "C",
-    "CIF":      "C",
-    "CIA":      "C",
-    "CIJ":      "C",
-    "CID":      "C",
-    "CIS":      "C",
-    "CIG":      "C",
-    "CIT":      "C",
-    "CIH":      "C",
-    "CIU":      "C",
-    "CIP":      "C",
-    "CIN":      "C",
-    "CIQ":      "C",
-    "CIL":      "C",
-    "CIR":      "C",
-    "CIZ":      "C",
-    "CIV":      "C",
-    "PASS":     "P",
-    "LC":       "V",
-    "LE":       "E",
+    "DNI": "D",
+    "CUIL": "L",
+    "CUIT": "T",
+    "CPF": "C",
+    "CIB": "C",
+    "CIK": "C",
+    "CIX": "C",
+    "CIW": "C",
+    "CIE": "C",
+    "CIY": "C",
+    "CIM": "C",
+    "CIF": "C",
+    "CIA": "C",
+    "CIJ": "C",
+    "CID": "C",
+    "CIS": "C",
+    "CIG": "C",
+    "CIT": "C",
+    "CIH": "C",
+    "CIU": "C",
+    "CIP": "C",
+    "CIN": "C",
+    "CIQ": "C",
+    "CIL": "C",
+    "CIR": "C",
+    "CIZ": "C",
+    "CIV": "C",
+    "PASS": "P",
+    "LC": "V",
+    "LE": "E",
 }
 
 responsability_map = {
-    "IVARI":    "I",  # Inscripto,
-    "IVARNI":   "N",  # No responsable,
-    "RM":       "M",  # Monotributista,
-    "IVAE":     "E",  # Exento,
-    "NC":       "U",  # No categorizado,
-    "CF":       "F",  # Consumidor final,
-    "RMS":      "T",  # Monotributista social,
-    "RMTIP":    "P",  # Monotributista trabajador independiente promovido.
-    "1":        "I",  # Inscripto,
-    "2":        "N",  # No responsable,
-    "6":        "M",  # Monotributista,
-    "4":        "E",  # Exento,
-    "7":        "U",  # No categorizado,
-    "5":        "F",  # Consumidor final,
-    "13":       "T",  # Monotributista social,
+    "IVARI": "I",   # Inscripto,
+    "IVARNI": "N",  # No responsable,
+    "RM": "M",      # Monotributista,
+    "IVAE": "E",    # Exento,
+    "NC": "U",      # No categorizado,
+    "CF": "F",      # Consumidor final,
+    "RMS": "T",     # Monotributista social,
+    "RMTIP": "P",   # Monotributista trabajador independiente promovido.
+    "1": "I",       # Inscripto,
+    "2": "N",       # No responsable,
+    "6": "M",       # Monotributista,
+    "4": "E",       # Exento,
+    "7": "U",       # No categorizado,
+    "5": "F",       # Consumidor final,
+    "13": "T",      # Monotributista social,
 }
 
 
 class Invoice(osv.osv):
-
     _inherit = 'account.invoice'
 
     def check_counters(self, cr, uid, ids, sequences, context=None):
@@ -92,8 +91,8 @@ class Invoice(osv.osv):
             if next_number != inv.next_invoice_number:
                 raise osv.except_osv(u'Error de secuencia',
                                      'Proximo numero Odoo {} - Proximo numero Controlador Fiscal {}'.format(
-                                         inv.next_invoice_number,
-                                         next_number)
+                                             inv.next_invoice_number,
+                                             next_number)
                                      )
 
     def action_number(self, cr, uid, ids, context=None):
@@ -130,7 +129,7 @@ class Invoice(osv.osv):
             if inv.journal_id.use_fiscal_printer:
                 if inv.amount_total > 999 and inv.partner_id.id == inv.journal_id.fiscal_printer_anon_partner_id.id:
                     raise osv.except_osv(_(u'Cancelling Validation'),
-                             _(u'No se pueden emitir tickets superiores a $1,000 a Consumidor Final.'))
+                                         _(u'No se pueden emitir tickets superiores a $1,000 a Consumidor Final.'))
                 journal = inv.journal_id
                 ticket = {
                     "turist_ticket": False,
@@ -145,11 +144,11 @@ class Invoice(osv.osv):
                         "document_number": inv.partner_id.document_number,
                         "responsability": responsability_map.get(inv.partner_id.responsability_id.code, "F"),
                     },
-                    #"related_document": (picking_obj.search_read(cr, uid, [('origin','=',inv.origin or '')], ["name"]) +
+                    # "related_document": (picking_obj.search_read(cr, uid, [('origin','=',inv.origin or '')], ["name"]) +
                     #                    [{'name': _("No picking")}])[0]['name'],
                     "related_document_2": inv.origin or "",
                     "turist_check": "",
-                    "lines": [ ],
+                    "lines": [],
                     "cut_paper": True,
                     "electronic_answer": False,
                     "print_return_attribute": False,
@@ -166,7 +165,7 @@ class Invoice(osv.osv):
                     ticket['related_document'] = \
                         (picking_obj.search_read(cr, uid, [('origin', '=', inv.origin or '')],
                                                  ["name"]) + [{'name': _("No picking")}])[0]['name']
-                else:    
+                else:
                     ticket['related_document'] = 'N/A'
                 if inv.origin:
                     ticket['origin_document'] = inv.origin
@@ -204,14 +203,13 @@ class Invoice(osv.osv):
                         "description_4": "",
                         "item_description": "%5.2f%%" % line.discount,
                         "quantity": line.quantity,
-                        "unit_price": line.price_unit * (line.discount/100.),
+                        "unit_price": line.price_unit * (line.discount / 100.),
                         "vat_rate": line.product_id.tax_rate,
                         "fixed_taxes": 0,
                         "taxes_rate": 0
                     })
 
-
-                #TODO Quitar esto cuando ande bien.
+                # TODO Quitar esto cuando ande bien.
                 print '-----------------------------------------'
                 for line in ticket['lines']:
                     print '{:12.2f} IVA {:.2f}% {:2.0f}Un {}'.format(
@@ -221,17 +219,17 @@ class Invoice(osv.osv):
                             line['item_description'])
                 print '-----------------------------------------'
 
-                #import wdb;wdb.set_trace()
-                if inv.type == 'out_invoice':	
+                # import wdb;wdb.set_trace()
+                if inv.type == 'out_invoice':
                     r = journal.make_fiscal_ticket(ticket)[inv.journal_id.id]
                 if inv.type == 'out_refund':
                     if 'payments' not in ticket.keys():
                         ticket['payments'] = [{
-                                'extra_description': '',
-                                'amount': inv.amount_total,
-                                'type': 'pay',
-                                'description': 'Cuenta corriente del cliente'
-                                }]
+                            'extra_description': '',
+                            'amount': inv.amount_total,
+                            'type': 'pay',
+                            'description': 'Cuenta corriente del cliente'
+                        }]
                     if not ticket['debit_note']:
                         ticket['debit_note'] = ''
                     if not ticket['turist_ticket']:
@@ -247,13 +245,13 @@ class Invoice(osv.osv):
                         inv.journal_id.point_of_sale,
                         r['document_number'])
                 vals = {
-                        'nro_ticket_impreso': nro_impreso
-                       }
+                    'nro_ticket_impreso': nro_impreso
+                }
                 self.pool.get('account.invoice').write(cr, uid, inv.id, vals)
             return True
 
         elif r and 'error' in r:
-            #import wdb;wdb.set_trace()
+            # import wdb;wdb.set_trace()
             raise osv.except_osv(_(u'Cancelling Validation'),
                                  _('Error: %s') % r['error'])
         else:
