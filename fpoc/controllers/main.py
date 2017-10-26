@@ -21,7 +21,7 @@ from Queue import Queue, Full, Empty
 import logging
 
 _logger = logging.getLogger(__name__)
-# _logger.setLevel(logging.DEBUG)
+#_logger.setLevel(logging.DEBUG)
 
 # jinegconpkicmfefahjgkpinkgoabnme
 # access_control_allow_origin = 'chrome-extension://gileacnnoefamnjnhjnijommagpamona'
@@ -47,7 +47,6 @@ def http_dispatch(self):
         r.headers._list.append(('Access-Control-Allow-Credentials', 'true'))
     return r
 
-
 oeweb.HttpRequest.dispatch = http_dispatch
 
 # Monkey path for JsonRequest
@@ -60,7 +59,6 @@ def json_dispatch(self):
         r.headers._list.append(('Access-Control-Allow-Origin', access_control_allow_origin))
         r.headers._list.append(('Access-Control-Allow-Credentials', 'true'))
     return r
-
 
 oeweb.JsonRequest.dispatch = json_dispatch
 
@@ -86,7 +84,6 @@ def connection_dropped(self, error, environ=None):
             _logger.debug(u"Removing spools %s by %s" % (qid, str(error).decode('utf8')))
         else:
             _logger.warning(u"Removing spools %s by %s, but it not was stored." % (qid, str(error).decode('utf8')))
-
 
 WSGIRequestHandler.connection_dropped = connection_dropped
 
@@ -171,9 +168,9 @@ class FiscalPrinterController(oeweb.Controller):
         # import pdb;pdb.set_trace()
         wsgienv = req.httprequest.environ
         env = dict(
-                base_location=req.httprequest.url_root.rstrip('/'),
-                HTTP_HOST=wsgienv['HTTP_HOST'],
-                REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+            base_location=req.httprequest.url_root.rstrip('/'),
+            HTTP_HOST=wsgienv['HTTP_HOST'],
+            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
         )
         req.session.authenticate(database, login, password, env)
         return {'session_id': req.session_id}
@@ -199,8 +196,8 @@ class FiscalPrinterController(oeweb.Controller):
         if qid in event_hub:
             _logger.debug("Close connection spool %s by duplication." % qid)
             return req.make_response('\n\nevent: close\n\n\n\n',
-                                     [('cache-control', 'no-cache'),
-                                      ('Content-Type', 'text/event-stream')])
+                                 [('cache-control', 'no-cache'),
+                                  ('Content-Type', 'text/event-stream')])
 
         _logger.debug("Open new connection spool: %s" % qid)
 
@@ -215,8 +212,8 @@ class FiscalPrinterController(oeweb.Controller):
             event_id = last_event_id
 
         self.spool_response = req.make_response(self.event_source_iter(last_event_id),
-                                                [('cache-control', 'no-cache'),
-                                                 ('Content-Type', 'text/event-stream')])
+                                 [('cache-control', 'no-cache'),
+                                  ('Content-Type', 'text/event-stream')])
         return self.spool_response
 
     @oeweb.jsonrequest

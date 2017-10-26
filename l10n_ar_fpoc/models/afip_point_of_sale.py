@@ -64,10 +64,10 @@ class AfipPointOfSale(models.Model):
                 next_by_controller = int(sequences['last_a_sale_document']) + 1
                 if next_by_controller != next_by_seq:
                     msg += 'Documento {} (id {}), Odoo {}, Controlador {}\n'.format(
-                            j_document_class.afip_document_class_id.name,
-                            j_document_class.id,
-                            next_by_seq,
-                            next_by_controller
+                        j_document_class.afip_document_class_id.name,
+                        j_document_class.id,
+                        next_by_seq,
+                        next_by_controller
                     )
 
             if j_document_class.afip_document_class_id.name == 'FACTURAS B':
@@ -75,10 +75,10 @@ class AfipPointOfSale(models.Model):
                 next_by_controller = int(sequences['last_b_sale_document']) + 1
                 if next_by_controller != next_by_seq:
                     msg += 'Documento {} (id {}), Odoo {}, Controlador {}\n'.format(
-                            j_document_class.afip_document_class_id.name,
-                            j_document_class.id,
-                            next_by_seq,
-                            next_by_controller
+                        j_document_class.afip_document_class_id.name,
+                        j_document_class.id,
+                        next_by_seq,
+                        next_by_controller
                     )
 
             if j_document_class.afip_document_class_id.name == 'NOTAS DE CREDITO A':
@@ -86,10 +86,10 @@ class AfipPointOfSale(models.Model):
                 next_by_controller = int(sequences['last_a_credit_document']) + 1
                 if next_by_controller != next_by_seq:
                     msg += 'Documento {} (id {}), Odoo {}, Controlador {}\n'.format(
-                            j_document_class.afip_document_class_id.name,
-                            j_document_class.id,
-                            next_by_seq,
-                            next_by_controller
+                        j_document_class.afip_document_class_id.name,
+                        j_document_class.id,
+                        next_by_seq,
+                        next_by_controller
                     )
 
             if j_document_class.afip_document_class_id.name == 'NOTAS DE CREDITO B':
@@ -97,10 +97,10 @@ class AfipPointOfSale(models.Model):
                 next_by_controller = int(sequences['last_b_credit_document']) + 1
                 if next_by_controller != next_by_seq:
                     msg += 'Documento {} (id {}), Odoo {}, Controlador {}\n'.format(
-                            j_document_class.afip_document_class_id.name,
-                            j_document_class.id,
-                            next_by_seq,
-                            next_by_controller
+                        j_document_class.afip_document_class_id.name,
+                        j_document_class.id,
+                        next_by_seq,
+                        next_by_controller
                     )
         if msg:
             msg = _('There are some doument desynchronized:\n') + msg
