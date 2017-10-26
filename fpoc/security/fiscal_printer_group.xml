@@ -8,12 +8,11 @@
             <field name="parent_id" ref="base.module_category_hidden"/>
         </record>
 
-    <!-- GRUPO FISCAL PRINTER ADMINS -->
-    <record id="group_fiscal_printers_admin" model="res.groups">
-        <field name="name">Administrador</field>
-        <field name="category_id" ref="module_category_fiscal_printer"/>
-        <field name="comment">Grupo para los administradores de impresoras fiscales</field>
-    </record>
-
+        <!-- GRUPO FISCAL PRINTER ADMINS -->
+        <record id="group_fiscal_printers_admin" model="res.groups">
+            <field name="name">Administrador</field>
+            <field name="category_id" ref="module_category_fiscal_printer"/>
+            <field name="comment">Grupo para los administradores de impresoras fiscales</field>
+        </record>
     </data>
 </openerp>
