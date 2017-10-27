@@ -33,16 +33,16 @@ class AfipPointOfSale(models.Model):
                 lambda r: r.journal_id.type in ['sale', 'sale_refund']):
 
             if j_document_class.afip_document_class_id.name == 'FACTURAS A':
-                j_document_class.sequence_id.number_next_actual = FA + 1
+                j_document_class.sudo().sequence_id.number_next_actual = FA + 1
 
             if j_document_class.afip_document_class_id.name == 'FACTURAS B':
-                j_document_class.sequence_id.number_next_actual = FB + 1
+                j_document_class.sudo().sequence_id.number_next_actual = FB + 1
 
             if j_document_class.afip_document_class_id.name == 'NOTAS DE CREDITO A':
-                j_document_class.sequence_id.number_next_actual = NA + 1
+                j_document_class.sudo().sequence_id.number_next_actual = NA + 1
 
             if j_document_class.afip_document_class_id.name == 'NOTAS DE CREDITO B':
-                j_document_class.sequence_id.number_next_actual = NB + 1
+                j_document_class.sudo().sequence_id.number_next_actual = NB + 1
 
     @api.multi
     def check_document_local_controller_number(self):
