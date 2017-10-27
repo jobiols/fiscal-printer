@@ -22,7 +22,8 @@
     'author': 'Moldeo Interactive, jeo Software',
     'category': 'base.module_category_hidden',
     'depends': [
-        'account'
+        'account',
+        'l10n_ar_invoice',
     ],
     'description': 'Fiscal Printer on the Cloud',
     'license': 'AGPL-3',

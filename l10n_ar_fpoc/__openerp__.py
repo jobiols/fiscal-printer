@@ -28,7 +28,7 @@
                 'l10n_ar_invoice',
                 'l10n_ar_afipws_fe',
                 'ticket_citi_fix',
-                'base_vat_dni'
+                'partner_fiscal_constraints',
                 ],
     'name': 'Fiscal Printer on the Cloud support for Argentina Localization',
     'description': '___',

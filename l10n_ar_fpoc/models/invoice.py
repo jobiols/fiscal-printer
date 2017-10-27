@@ -119,6 +119,9 @@ class Invoice(osv.osv):
                 inv.validation_type = 'fiscal_controller'
 
     def action_fiscal_printer(self, cr, uid, ids, context=None):
+        """ Imprimir un ticket en controlador fiscal.
+        """
+        #import wdb;wdb.set_trace()
         picking_obj = self.pool.get('stock.picking')
         user_obj = self.pool.get('res.users')
 
@@ -222,6 +225,9 @@ class Invoice(osv.osv):
                             line['quantity'],
                             line['item_description']))
                 _logger.info('-------------------------------------------------------------')
+                print '-------------------------------------------------------------'
+                print ticket
+                print '-------------------------------------------------------------'
 
                 # import wdb;wdb.set_trace()
                 if inv.type == 'out_invoice':
