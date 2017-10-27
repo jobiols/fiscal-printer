@@ -5,10 +5,10 @@
         <record id="ra_pos_view_account_invoice_form" model="ir.ui.view">
             <field name="name">ra.pos.view.account.invoice.form</field>
             <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <field name="move_id" position="after">
-                    <field name="nro_ticket_impreso" />
+                    <field name="nro_ticket_impreso"/>
                 </field>
 
                 <!-- el documento origen debe estar porque sino se cuelga al mandar un ticket

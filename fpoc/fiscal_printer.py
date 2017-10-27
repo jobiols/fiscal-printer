@@ -14,8 +14,9 @@ from datetime import datetime
 from openerp.addons.fpoc.controllers.main import DenialService
 
 import logging
+
 _logger = logging.getLogger(__name__)
-#_logger.setLevel(logging.DEBUG)
+# _logger.setLevel(logging.DEBUG)
 
 
 class FiscalPrinterDisconnected(osv.TransientModel):
@@ -51,7 +52,7 @@ class FiscalPrinterDisconnected(osv.TransientModel):
         cr.execute('SELECT COUNT(*) FROM %s' % self._table)
         count = cr.fetchone()[0]
         if not force and count > 0:
-            return 
+            return
         if count > 0:
             cr.execute('DELETE FROM %s' % self._table)
         t_fp_obj = self.pool.get('fpoc.fiscal_printer')
@@ -76,7 +77,8 @@ class FiscalPrinterDisconnected(osv.TransientModel):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         self._update_(cr, uid, force=True)
-        return super(FiscalPrinterDisconnected, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
+        return super(FiscalPrinterDisconnected, self).search(cr, uid, args, offset=offset, limit=limit, order=order,
+                                                             context=context, count=count)
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         self._update_(cr, uid, force=False)
@@ -125,13 +127,13 @@ class FiscalPrinter(osv.osv):
                 else:
                     clock_now = str(datetime.datetime.now())
                 r[p_id] = {
-                    #'clock': dt.strftime("%Y-%m-%d %H:%M:%S"),
+                    # 'clock': dt.strftime("%Y-%m-%d %H:%M:%S"),
                     'clock': clock_now,
                     'printerStatus': s[p_id].get('strPrinterStatus', 'Unknown'),
                     'fiscalStatus': s[p_id].get('strFiscalStatus', 'Unknown'),
                 }
             else:
-                r[p_id]= {
+                r[p_id] = {
                     'clock': False,
                     'printerStatus': 'Offline',
                     'fiscalStatus': 'Offline',
@@ -147,9 +149,12 @@ class FiscalPrinter(osv.osv):
         'model': fields.char(string='Model'),
         'serialNumber': fields.char(string='Serial Number (S/N)'),
         'lastUpdate': fields.datetime(string='Last Update'),
-        'printerStatus': fields.function(_get_status, type="char", method=True, readonly="True", multi="state", string='Printer status'),
-        'fiscalStatus':  fields.function(_get_status, type="char", method=True, readonly="True", multi="state", string='Fiscal status'),
-        'clock':         fields.function(_get_status, type="datetime", method=True, readonly="True", multi="state", string='Clock'),
+        'printerStatus': fields.function(_get_status, type="char", method=True, readonly="True", multi="state",
+                                         string='Printer status'),
+        'fiscalStatus': fields.function(_get_status, type="char", method=True, readonly="True", multi="state",
+                                        string='Fiscal status'),
+        'clock': fields.function(_get_status, type="datetime", method=True, readonly="True", multi="state",
+                                 string='Clock'),
         'session_id': fields.char(string='session_id'),
     }
 
@@ -159,14 +164,15 @@ class FiscalPrinter(osv.osv):
     _constraints = [
     ]
 
-    _sql_constraints = [('model_serialNumber_unique', 'unique("model", "serialNumber")', 'this printer with this model and serial number yet exists')]
+    _sql_constraints = [('model_serialNumber_unique', 'unique("model", "serialNumber")',
+                         'this printer with this model and serial number yet exists')]
 
     def auto_attach(self, cr, uid, ids, context=None):
         # TODO si hay mas de una impresora esto no anda y tiene harcodeado el diario (jobiols)
         journal_obj = self.pool.get('account.journal')
         journal_ids = journal_obj.search(cr, uid, ['|',
-                                                    ('code', '=', 'RVE08'),
-                                                    ('code', '=', 'VEN08')])
+                                                   ('code', '=', 'RVE08'),
+                                                   ('code', '=', 'VEN08')])
         ids = self.search(cr, uid, [])
         for fp_id in ids:
             for journ in journal_obj.browse(cr, uid, journal_ids):
@@ -193,13 +199,13 @@ class FiscalPrinter(osv.osv):
             do_event('advance_paper', {'name': fp.name},
                      session_id=fp.session_id, printer_id=fp.name)
         return True
-        
+
     def cut_paper(self, cr, uid, ids, context=None):
         for fp in self.browse(cr, uid, ids):
             do_event('cut_paper', {'name': fp.name},
                      session_id=fp.session_id, printer_id=fp.name)
         return True
-        
+
     def open_fiscal_journal(self, cr, uid, ids, context=None):
         for fp in self.browse(cr, uid, ids):
             do_event('open_fiscal_journal', {'name': fp.name},
@@ -250,7 +256,7 @@ class FiscalPrinter(osv.osv):
             fparms['name'] = fp.name
             fparms['options'] = options
             fparms['ticket'] = ticket
-            #event_result = do_event('make_fiscal_ticket', fparms,
+            # event_result = do_event('make_fiscal_ticket', fparms,
             event_result = do_event('make_ticket_factura', fparms,
                                     session_id=fp.session_id, printer_id=fp.name)
             r[fp.id] = event_result.pop() if event_result else False
@@ -271,7 +277,7 @@ class FiscalPrinter(osv.osv):
         return r
 
     def cancel_fiscal_ticket(self, cr, uid, ids, context=None):
-        fparms = {} 
+        fparms = {}
         r = {}
         for fp in self.browse(cr, uid, ids):
             fparms['name'] = fp.name
@@ -279,6 +285,5 @@ class FiscalPrinter(osv.osv):
                                     session_id=fp.session_id, printer_id=fp.name)
             r[fp.id] = event_result.pop() if event_result else False
         return r
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
