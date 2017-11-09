@@ -225,9 +225,6 @@ class Invoice(osv.osv):
                             line['quantity'],
                             line['item_description']))
                 _logger.info('-------------------------------------------------------------')
-                print '-------------------------------------------------------------'
-                print ticket
-                print '-------------------------------------------------------------'
 
                 # import wdb;wdb.set_trace()
                 if inv.type == 'out_invoice':
@@ -254,6 +251,10 @@ class Invoice(osv.osv):
                 nro_impreso = '{:0>4}-{:0>8}'.format(
                         inv.journal_id.point_of_sale,
                         r['document_number'])
+
+                _logger.info('factura {} {}'.format(nro_impreso, inv.partner_id.name))
+                _logger.info('-------------------------------------------------------------')
+
                 vals = {
                     'nro_ticket_impreso': nro_impreso
                 }
