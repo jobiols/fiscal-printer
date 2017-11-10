@@ -8,8 +8,6 @@ from openerp.osv import osv, fields
 import logging
 
 _logger = logging.getLogger(__name__)
-
-
 # _logger.setLevel(logging.DEBUG)
 
 
@@ -86,8 +84,6 @@ class account_journal(osv.osv):
         return r
 
     _columns = {
-        'use_fiscal_printer': fields.boolean('Associated to a fiscal printer'),
-        'fp_serial_number': fields.char('Numero de serie de la impresora'),
         'last_a_sale_document_completed': fields.function(
                 _get_last_a_sale_document_completed, type='integer',
                 string='Number of A Invoices Generated',

@@ -132,8 +132,13 @@ class Invoice(osv.osv):
         for inv in self.browse(cr, uid, ids, context):
             if inv.journal_id.use_fiscal_printer:
                 if inv.amount_total > 999 and inv.partner_id.id == inv.journal_id.fiscal_printer_anon_partner_id.id:
-                    raise osv.except_osv(_(u'Cancelling Validation'),
-                                         _(u'No se pueden emitir tickets superiores a $1,000 a Consumidor Final.'))
+                    raise osv.except_osv(u'Cancelando validacion',
+                                         u'No se pueden emitir tickets superiores a $1,000 a Consumidor Final.')
+
+                if inv.type == 'out_refund' and inv.partner_id.id == inv.journal_id.fiscal_printer_anon_partner_id.id:
+                    raise osv.except_osv(_(u'Cancelando validacion'),
+                                         _(u'No se pueden emitir notas de credito a consumidor final anonimo.'))
+
                 journal = inv.journal_id
                 ticket = {
                     "turist_ticket": False,
