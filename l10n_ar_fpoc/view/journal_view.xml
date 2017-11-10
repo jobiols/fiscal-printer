@@ -14,8 +14,8 @@
                           attrs="{'invisible': [('use_fiscal_printer','=',False)]}">
                         <group colspan="2" col="2">
                             <field name='fiscal_printer_id'/>
-                            <field name='point_of_sale'/>
-                            <field name='fiscal_printer_configuration_id'/>
+                            <field name='fp_serial_number'/>
+<!--                            <field name='fiscal_printer_configuration_id'/> -->
                             <field name='fiscal_printer_anon_partner_id'/>
                             <field name='fiscal_printer_state'/>
                             <field name='fiscal_printer_fiscal_state'/>

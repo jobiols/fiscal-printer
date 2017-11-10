@@ -36,17 +36,15 @@ class FiscalPrinterDisconnected(osv.TransientModel):
     }
 
     def auto_connect(self, cr, uid, context=None):
-        """ si hay una impresora desconectada la conecta, llamado desde cron
+        """ si hay una impresora desconectada la conecta, y la linkea
+            con el diario correspondiente mirando el nro de serie.
+            llamado desde cron
         """
         ids = self.search(cr, uid, [], context=context)
-        # si hay alguna desconectada la conecto
         if ids:
             for fiscal_id in ids:
                 self.create_fiscal_printer(cr, uid, [fiscal_id])
-                # verifico que los diarios la tengan y si no se las pongo.
-                # TODO si hay mas de una impresora esto no anda.
-                fiscal_printer_obj = self.pool.get('fpoc.fiscal_printer')
-                fiscal_printer_obj.auto_attach(cr, uid, ids)
+
 
     def _update_(self, cr, uid, force=True, context=None):
         cr.execute('SELECT COUNT(*) FROM %s' % self._table)
@@ -57,8 +55,6 @@ class FiscalPrinterDisconnected(osv.TransientModel):
             cr.execute('DELETE FROM %s' % self._table)
         t_fp_obj = self.pool.get('fpoc.fiscal_printer')
         R = do_event('list_printers', control=True)
-        w_wfp_ids = []
-        i = 0
         for resp in R:
             if not resp: continue
             for p in resp['printers']:
@@ -86,7 +82,8 @@ class FiscalPrinterDisconnected(osv.TransientModel):
 
     def create_fiscal_printer(self, cr, uid, ids, context=None):
         """
-        Create fiscal printers from this temporal printers
+        Create fiscal printers from this temporal printers and atach to the correct journal
+        looking for serial number
         """
         fp_obj = self.pool.get('fpoc.fiscal_printer')
         for pri in self.browse(cr, uid, ids):
@@ -97,7 +94,14 @@ class FiscalPrinterDisconnected(osv.TransientModel):
                 'serialNumber': pri.serialNumber,
                 'session_id': pri.session_id
             }
-            fp_obj.create(cr, uid, values)
+            fp_id = fp_obj.create(cr, uid, values)
+
+            # attach this printer to the correct journal
+            journal_obj = self.pool.get('account.journal')
+            ids = journal_obj.search(cr, uid, [(['fp_serial_number', '=', pri.serialNumber])])
+            for journal in journal_obj.browse(cr, uid, ids):
+                journal.fiscal_printer_id = fp_id
+
         return {
             'name': _('Fiscal Printers'),
             'domain': [],

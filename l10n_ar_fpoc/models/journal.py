@@ -87,9 +87,7 @@ class account_journal(osv.osv):
 
     _columns = {
         'use_fiscal_printer': fields.boolean('Associated to a fiscal printer'),
-        'point_of_sale': fields.char('Punto de venta'),
-        # 'fiscal_printer_items_generated': fields.function(_get_fp_items_generated, type='integer', string='Number of Invoices Generated',method=True,
-        #    help="Check how many invoices was generated in the printer.", readonly=True),
+        'fp_serial_number': fields.char('Numero de serie de la impresora'),
         'last_a_sale_document_completed': fields.function(
                 _get_last_a_sale_document_completed, type='integer',
                 string='Number of A Invoices Generated',

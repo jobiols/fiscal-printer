@@ -121,9 +121,7 @@ class Invoice(osv.osv):
     def action_fiscal_printer(self, cr, uid, ids, context=None):
         """ Imprimir un ticket en controlador fiscal.
         """
-        #import wdb;wdb.set_trace()
         picking_obj = self.pool.get('stock.picking')
-        user_obj = self.pool.get('res.users')
 
         r = {}
         if len(ids) > 1:
@@ -195,6 +193,7 @@ class Invoice(osv.osv):
                         "fixed_taxes": 0,
                         "taxes_rate": 0
                     })
+                    # procesar el procentaje de descuento si es que hay
                     if line.discount > 0:
                         ticket["lines"].append({
                             "item_action": "discount_item",
@@ -211,7 +210,7 @@ class Invoice(osv.osv):
                             "item_description": "%5.2f%%" % line.discount,
                             "quantity": line.quantity,
                             "unit_price": line.price_unit * (line.discount / 100.),
-                            "vat_rate": line.product_id.tax_rate,
+                            "vat_rate": line.invoice_line_tax_id.amount * 100,
                             "fixed_taxes": 0,
                             "taxes_rate": 0
                         })
@@ -226,7 +225,6 @@ class Invoice(osv.osv):
                             line['item_description']))
                 _logger.info('-------------------------------------------------------------')
 
-                # import wdb;wdb.set_trace()
                 if inv.type == 'out_invoice':
                     r = journal.make_fiscal_ticket(ticket)[inv.journal_id.id]
                 if inv.type == 'out_refund':
@@ -246,13 +244,12 @@ class Invoice(osv.osv):
                     r = journal.make_fiscal_refund_ticket(ticket)[inv.journal_id.id]
 
         if r and 'error' not in r:
-            #  import wdb; wdb.set_trace()
             if 'document_number' in r:
                 nro_impreso = '{:0>4}-{:0>8}'.format(
-                        inv.journal_id.point_of_sale,
+                        inv.journal_id.point_of_sale_id.number,
                         r['document_number'])
 
-                _logger.info('factura {} {}'.format(nro_impreso, inv.partner_id.name))
+                _logger.info('ticket impreso {} {}'.format(nro_impreso, inv.partner_id.name))
                 _logger.info('-------------------------------------------------------------')
 
                 vals = {
@@ -262,7 +259,6 @@ class Invoice(osv.osv):
             return True
 
         elif r and 'error' in r:
-            # import wdb;wdb.set_trace()
             raise osv.except_osv(_(u'Cancelling Validation'),
                                  _('Error: %s') % r['error'])
         else:
@@ -271,5 +267,6 @@ class Invoice(osv.osv):
                                      _(u'Unknown error.'))
             else:
                 return True
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
