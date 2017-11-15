@@ -16,8 +16,8 @@ class AccountJournal(models.Model):
             'Numero de serie de la impresora'
     )
     fp_status = fields.Char(
-        'Estado',
-        compute='_get_fp_status'
+            'Estado',
+            compute='_get_fp_status'
     )
 
     @api.one

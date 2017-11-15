@@ -16,6 +16,8 @@ from openerp.addons.fpoc.controllers.main import DenialService
 import logging
 
 _logger = logging.getLogger(__name__)
+
+
 # _logger.setLevel(logging.DEBUG)
 
 
@@ -44,7 +46,6 @@ class FiscalPrinterDisconnected(osv.TransientModel):
         if ids:
             for fiscal_id in ids:
                 self.create_fiscal_printer(cr, uid, [fiscal_id])
-
 
     def _update_(self, cr, uid, force=True, context=None):
         cr.execute('SELECT COUNT(*) FROM %s' % self._table)

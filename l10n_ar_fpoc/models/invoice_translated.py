@@ -13,4 +13,3 @@ class AccountInvoice(models.Model):
     nro_ticket_impreso = fields.Char(
             'Nro ticket impreso'
     )
-

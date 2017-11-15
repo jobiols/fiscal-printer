@@ -4,20 +4,14 @@
 # directory
 ##############################################################################
 
-import time
-import base64
 import openerp.addons.web.http as oeweb
-from openerp.addons.web.controllers.main import content_disposition
-import psycopg2
-import sys
 import json
-from multiprocessing import Process
 import threading
 from openerp.osv import osv
 from openerp.tools.translate import _
 from urlparse import parse_qs
 
-from Queue import Queue, Full, Empty
+from Queue import Queue, Empty
 import logging
 
 _logger = logging.getLogger(__name__)
