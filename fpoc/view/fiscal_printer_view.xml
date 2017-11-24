@@ -47,7 +47,8 @@
                             <field name="protocol"/>
                             <field name="model"/>
                             <field name="serialNumber"/>
-                            <field name="lastUpdate"/>
+<!--                            <field name="lastUpdate"/> -->
+                            <field name="point_of_sale"/>
                             <field name="session_id"/>
                         </group>
                         <notebook>
@@ -89,7 +90,8 @@
                     <field name="protocol"/>
                     <field name="model"/>
                     <field name="serialNumber"/>
-                    <field name="lastUpdate"/>
+<!--                     <field name="lastUpdate"/> -->
+                    <field name="point_of_sale"/>
                     <field name="session_id"/>
                 </tree>
             </field>

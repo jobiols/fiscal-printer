@@ -153,7 +153,7 @@ class FiscalPrinter(osv.osv):
         'protocol': fields.char(string='Protocol'),
         'model': fields.char(string='Model'),
         'serialNumber': fields.char(string='Serial Number (S/N)'),
-        'lastUpdate': fields.datetime(string='Last Update'),
+#        'lastUpdate': fields.datetime(string='Last Update'),
         'printerStatus': fields.function(_get_status, type="char", method=True, readonly="True", multi="state",
                                          string='Printer status'),
         'fiscalStatus': fields.function(_get_status, type="char", method=True, readonly="True", multi="state",
@@ -163,25 +163,8 @@ class FiscalPrinter(osv.osv):
         'session_id': fields.char(string='session_id'),
     }
 
-    _defaults = {
-    }
-
-    _constraints = [
-    ]
-
     _sql_constraints = [('model_serialNumber_unique', 'unique("model", "serialNumber")',
                          'this printer with this model and serial number yet exists')]
-
-    def auto_attach(self, cr, uid, ids, context=None):
-        # TODO si hay mas de una impresora esto no anda y tiene harcodeado el diario (jobiols)
-        journal_obj = self.pool.get('account.journal')
-        journal_ids = journal_obj.search(cr, uid, ['|',
-                                                   ('code', '=', 'RVE08'),
-                                                   ('code', '=', 'VEN08')])
-        ids = self.search(cr, uid, [])
-        for fp_id in ids:
-            for journ in journal_obj.browse(cr, uid, journal_ids):
-                journ.fiscal_printer_id = fp_id
 
     def update_printers(self, cr, uid, ids, context=None):
         r = do_event('info', {})

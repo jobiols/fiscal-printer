@@ -32,9 +32,11 @@ class epson_ar_fiscal_printer(osv.osv):
         r = {}
         for fp in self.browse(cr, uid, ids):
             r[fp.id] = {fn: False for fn in field_name}
-            event_result = do_event('read_attributes', {'name': fp.name},
-                                    session_id=fp.session_id, printer_id=fp.name)
-            event_result = event_result.pop() if event_result else {}
+            # Eliminamos esto porque causa un retardo de 30 segundos
+#            event_result = do_event('read_attributes', {'name': fp.name},
+#                                    session_id=fp.session_id, printer_id=fp.name)
+#            event_result = event_result.pop() if event_result else {}
+            event_result = {}
             if event_result and 'attributes' in event_result:
                 attrs = event_result['attributes']
                 r[fp.id]['header'] = '\n'.join([attrs[k] for k in _header_lines

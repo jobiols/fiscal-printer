@@ -69,7 +69,6 @@ class Invoice(osv.osv):
     def check_counters(self, cr, uid, ids, sequences, context=None):
         """ Verificar que las secuencias son correctas o generar una excepcion
         """
-        # import wdb;wdb.set_trace()
         try:
             FA = sequences['last_a_sale_document']
             NA = sequences['last_a_credit_document']

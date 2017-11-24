@@ -13,7 +13,7 @@ class AccountJournal(models.Model):
             'Asociado a una impresora fiscal'
     )
     fp_serial_number = fields.Char(
-            'Numero de serie de la impresora'
+            'Nro de serie'
     )
     fp_status = fields.Char(
             'Estado',

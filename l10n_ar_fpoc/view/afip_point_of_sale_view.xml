@@ -9,13 +9,29 @@
             <field name="arch" type="xml">
                 <header>
                     <button name="check_document_local_controller_number"
-                            string="Chequear numeros Controlador/Local"
+                            string="Chequear secuencias Controlador/Local"
                             help="Chequear los numeros de documento locales contra los del controlador"
                             type="object"
                             attrs="{'invisible':[('type', '!=', 'fiscal_controller')]}"/>
                     <button name="sync_document_local_remote_number"
-                            string="Sincronizar numeros Controlador/Local"
+                            string="Sincronizar secuencias Controlador/Local"
                             help="Sincronizar los numeros de documento locales para igualar los del controlador"
+                            type="object"
+                            attrs="{'invisible':[('type', '!=', 'fiscal_controller')]}"/>
+                    <button name="open_fiscal_journal"
+                            string="Abrir jornada fiscal"
+                            type="object"
+                            attrs="{'invisible':[('type', '!=', 'fiscal_controller')]}"/>
+                    <button name="close_fiscal_journal"
+                            string="Cerrar jornada fiscal"
+                            type="object"
+                            attrs="{'invisible':[('type', '!=', 'fiscal_controller')]}"/>
+                    <button name="short_test"
+                            string="Test corto"
+                            type="object"
+                            attrs="{'invisible':[('type', '!=', 'fiscal_controller')]}"/>
+                    <button name="long_test"
+                            string="Test largo"
                             type="object"
                             attrs="{'invisible':[('type', '!=', 'fiscal_controller')]}"/>
                 </header>

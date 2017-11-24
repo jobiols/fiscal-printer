@@ -10,6 +10,25 @@ from openerp.exceptions import Warning
 class AfipPointOfSale(models.Model):
     _inherit = 'afip.point_of_sale'
 
+    # TODO esto accede a la impresora conectada al primer journal del point of sale
+    #     si se ponen distintas impresoras en cada uno esto no anda.
+
+    @api.multi
+    def open_fiscal_journal(self):
+        self.journal_ids[0].fiscal_printer_id.open_fiscal_journal()
+
+    @api.multi
+    def close_fiscal_journal(self):
+        self.journal_ids[0].fiscal_printer_id.close_fiscal_journal()
+
+    @api.multi
+    def short_test(self):
+        self.journal_ids[0].fiscal_printer_id.short_test()
+
+    @api.multi
+    def long_test(self):
+        self.journal_ids[0].fiscal_printer_id.long_test()
+
     @api.multi
     def sync_document_local_remote_number(self):
         res = self.journal_ids[0].fiscal_printer_id.get_counters()
