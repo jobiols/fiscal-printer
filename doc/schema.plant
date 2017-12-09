@@ -16,7 +16,6 @@ class fpoc_fiscal_printer {
     protocol: fields.char
     model: fields.char
     serialNumber: fields.char
-    lastUpdate: fields.datetime
     printerStatus: fields.function
     fiscalStatus:  fields.function
     clock:         fields.function
