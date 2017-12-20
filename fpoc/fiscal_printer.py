@@ -4,7 +4,6 @@
 # directory
 ##############################################################################
 
-from openerp import tools, models, fields, api, _
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
