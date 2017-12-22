@@ -4,7 +4,7 @@ import unittest
 
 
 class test_backend(unittest.TestCase):
-    """ Test Backend """
+    """ Test Fiscal Printer """
 
     def setUp(self):
         super(test_backend, self).setUp()
