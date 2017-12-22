@@ -126,7 +126,6 @@ class Invoice(osv.osv):
         if len(ids) > 1:
             raise osv.except_osv(_(u'Cancelling Validation'),
                                  _(u'Please, validate one ticket at time.'))
-            return False
 
         for inv in self.browse(cr, uid, ids, context):
             if inv.journal_id.use_fiscal_printer:
