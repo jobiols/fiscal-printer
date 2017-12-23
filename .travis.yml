@@ -27,13 +27,13 @@ addons:
 
 env:
   global:
-  - VERSION="8.0" TESTS="1" LINT_CHECK="0"
+  - VERSION="8.0" TESTS="0" LINT_CHECK="1"
 
 virtualenv:
   system_site_packages: true
 
 install:
-  # repository requirements, we install them here because pyafipws must be installed in a second step
+# repository requirements, we install them here because pyafipws must be installed in a second step
 #  - pip install -r requirements.txt
 #  - pip install -r requirements2.txt
   - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
