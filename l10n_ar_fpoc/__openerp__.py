@@ -31,7 +31,7 @@
                 'partner_fiscal_constraints',
                 ],
     'name': 'Fiscal Printer on the Cloud support for Argentina Localization',
-    'description': '___',
+    'description': 'Support for fpoc',
     'init_xml': [],
     'license': 'AGPL-3',
     'test': [],
