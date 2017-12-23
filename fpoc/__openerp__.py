@@ -29,7 +29,7 @@
     'license': 'AGPL-3',
     'name': 'Fiscal Printer on the Cloud',
     'test': [
-        'test/check_spools.yml',
+
     ],
     'data': [
         'view/fiscal_printer_view.xml',
