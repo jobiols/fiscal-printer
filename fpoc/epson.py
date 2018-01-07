@@ -15,9 +15,11 @@ _logger = logging.getLogger(__name__)
 
 _schema = logging.getLogger(__name__ + '.schema')
 
-_header_lines = ['headerLine 1', 'headerLine 2', 'headerLine 3', 'headerLine 4', 'headerLine 5', 'headerLine 6',
+_header_lines = ['headerLine 1', 'headerLine 2', 'headerLine 3',
+                 'headerLine 4', 'headerLine 5', 'headerLine 6',
                  'headerLine 7']
-_footer_lines = ['footerLine 1', 'footerLine 2', 'footerLine 3', 'footerLine 4', 'footerLine 5', 'footerLine 6',
+_footer_lines = ['footerLine 1', 'footerLine 2', 'footerLine 3',
+                 'footerLine 4', 'footerLine 5', 'footerLine 6',
                  'footerLine 7']
 
 
@@ -34,7 +36,7 @@ class epson_ar_fiscal_printer(osv.osv):
             r[fp.id] = {fn: False for fn in field_name}
             # Eliminamos esto porque causa un retardo de 30 segundos
 #            event_result = do_event('read_attributes', {'name': fp.name},
-#                                    session_id=fp.session_id, printer_id=fp.name)
+#                               session_id=fp.session_id, printer_id=fp.name)
 #            event_result = event_result.pop() if event_result else {}
             event_result = {}
             if event_result and 'attributes' in event_result:
@@ -52,7 +54,9 @@ class epson_ar_fiscal_printer(osv.osv):
                                 r[fp.id][fn] = 0
                         elif fn in ['fechaFiscalizacion']:
                             line = attrs[fn]
-                            r[fp.id][fn] = "20{2}-{1}-{0}".format(*[line[i:i + 2] for i in range(0, len(line), 2)])
+                            r[fp.id][fn] = "20{2}-{1}-{0}".format(
+                                *[line[i:i + 2] for i in range(0,
+                                                               len(line), 2)])
                         else:
                             r[fp.id][fn] = attrs[fn]
         return r
@@ -62,11 +66,13 @@ class epson_ar_fiscal_printer(osv.osv):
         data = {'name': fp.name,
                 'attributes': {}}
         if field_name == 'header':
-            lines = field_value.split('\n')[:len(_header_lines)] if field_value else []
+            lines = field_value.split('\n')[:len(_header_lines)] \
+                if field_value else []
             lines = lines + (len(_header_lines) - len(lines)) * ['']
             data['attributes'].update(dict(zip(_header_lines, lines)))
         if field_name == 'footer':
-            lines = field_value.split('\n')[:len(_footer_lines)] if field_value else []
+            lines = field_value.split('\n')[:len(_footer_lines)] \
+                if field_value else []
             lines = lines + (len(_footer_lines) - len(lines)) * ['']
             data['attributes'].update(dict(zip(_footer_lines, lines)))
         event_result = do_event('write_attributes', data,
@@ -74,41 +80,63 @@ class epson_ar_fiscal_printer(osv.osv):
         return True
 
     _columns = {
-        'header': fields.function(_get_field, fnct_inv=_put_field, type="text", method=True, multi='epson_text',
+        'header': fields.function(_get_field, fnct_inv=_put_field,
+                                  type="text", method=True, multi='epson_text',
                                   store=False, string='Header'),
-        'footer': fields.function(_get_field, fnct_inv=_put_field, type="text", method=True, multi='epson_text',
+        'footer': fields.function(_get_field, fnct_inv=_put_field, type="text",
+                                  method=True, multi='epson_text',
                                   store=False, string='Footer'),
 
-        'razonSocial': fields.function(_get_field, type="char", method=True, multi='epson_info', store=False,
+        'razonSocial': fields.function(_get_field, type="char", method=True,
+                                       multi='epson_info', store=False,
                                        string='Razon Social'),
-        'cuit': fields.function(_get_field, type="char", method=True, multi='epson_info', store=False, string='CUIT'),
-        'caja': fields.function(_get_field, type="char", method=True, multi='epson_info', store=False,
+        'cuit': fields.function(_get_field, type="char", method=True,
+                                multi='epson_info', store=False,
+                                string='CUIT'),
+        'caja': fields.function(_get_field, type="char", method=True,
+                                multi='epson_info', store=False,
                                 string='Caja/Punto de Venta'),
-        'ivaResponsabilidad': fields.function(_get_field, type="char", method=True, multi='epson_info', store=False,
+        'ivaResponsabilidad': fields.function(_get_field, type="char",
+                                              method=True, multi='epson_info',
+                                              store=False,
                                               string='Resp. IVA'),
-        'calle': fields.function(_get_field, type="char", method=True, multi='epson_info', store=False, string='Calle'),
-        'numero': fields.function(_get_field, type="char", method=True, multi='epson_info', store=False,
+        'calle': fields.function(_get_field, type="char", method=True,
+                                 multi='epson_info', store=False,
+                                 string='Calle'),
+        'numero': fields.function(_get_field, type="char", method=True,
+                                  multi='epson_info', store=False,
                                   string='Numero'),
-        'piso': fields.function(_get_field, type="char", method=True, multi='epson_info', store=False, string='Piso'),
-        'depto': fields.function(_get_field, type="char", method=True, multi='epson_info', store=False, string='Depto'),
-        'localidad': fields.function(_get_field, type="char", method=True, multi='epson_info', store=False,
+        'piso': fields.function(_get_field, type="char", method=True,
+                                multi='epson_info', store=False,
+                                string='Piso'),
+        'depto': fields.function(_get_field, type="char", method=True,
+                                 multi='epson_info', store=False,
+                                 string='Depto'),
+        'localidad': fields.function(_get_field, type="char", method=True,
+                                     multi='epson_info', store=False,
                                      string='Localidad'),
-        'cpa': fields.function(_get_field, type="char", method=True, multi='epson_info', store=False,
+        'cpa': fields.function(_get_field, type="char", method=True,
+                               multi='epson_info', store=False,
                                string='Cod.Pos.'),
-        'provincia': fields.function(_get_field, type="char", method=True, multi='epson_info', store=False,
+        'provincia': fields.function(_get_field, type="char", method=True,
+                                     multi='epson_info', store=False,
                                      string='Provincia'),
-        'tasaIVA': fields.function(_get_field, type="float", method=True, multi='epson_info', store=False,
+        'tasaIVA': fields.function(_get_field, type="float", method=True,
+                                   multi='epson_info', store=False,
                                    string='Tasa IVA'),
-        'maxMonto': fields.function(_get_field, type="float", method=True, multi='epson_info', store=False,
+        'maxMonto': fields.function(_get_field, type="float", method=True,
+                                    multi='epson_info', store=False,
                                     string='Monto Maximo'),
-        'fechaFiscalizacion': fields.function(_get_field, type="date", method=True, multi='epson_info', store=False,
+        'fechaFiscalizacion': fields.function(_get_field, type="date",
+                                              method=True, multi='epson_info',
+                                              store=False,
                                               string='Fecha Fiscalizacion'),
     }
 
 
 class epson_ar_fiscal_tf_printer_configuration(osv.osv):
-    """
-    Configuracion necesaria para documentos fiscales Ticket-Facturas/Nota de Debito
+    """ Configuracion necesaria para documentos fiscales
+        Ticket-Facturas/Nota de Debito
     """
 
     _inherit = 'fpoc.configuration'
