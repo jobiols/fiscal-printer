@@ -3,11 +3,11 @@
 import unittest
 
 
-class test_backend(unittest.TestCase):
+class TestFpoc(unittest.TestCase):
     """ Test Fiscal Printer """
 
     def setUp(self):
-        super(test_backend, self).setUp()
+        super(TestFpoc, self).setUp()
 
-    def test_new_backend(self):
+    def test_01(self):
         self.assertEqual(1, 1)

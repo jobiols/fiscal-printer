@@ -29,7 +29,7 @@
                 'l10n_ar_afipws_fe',
                 'ticket_citi_fix',
                 'partner_fiscal_constraints',
-                'base_multi_store',
+                'account_multi_store',
                 ],
     'name': 'Support for FPoc',
     'init_xml': [],
