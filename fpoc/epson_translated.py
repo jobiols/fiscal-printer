@@ -10,15 +10,16 @@ class EpsonArFiscalPrinter(models.Model):
     _inherit = 'fpoc.fiscal_printer'
 
     point_of_sale = fields.Char(
-            'Punto de venta',
-            compute='_get_point_of_sale'
+        'Punto de venta',
+        compute='_get_point_of_sale'
     )
 
     @api.one
     def _get_point_of_sale(self):
         a = 'unknown'
         journal_obj = self.env['account.journal']
-        for journal in journal_obj.search([('fp_serial_number', '=', self.serialNumber)]):
+        for journal in journal_obj.search(
+            [('fp_serial_number', '=', self.serialNumber)]):
             a = journal.point_of_sale_id.name
 
         self.point_of_sale = a

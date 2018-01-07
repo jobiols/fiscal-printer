@@ -164,9 +164,12 @@ class epson_ar_fiscal_tf_printer_configuration(osv.osv):
     }
 
     def solve_status(self, cr, uid, ids, status, context=None):
-        r = super(epson_ar_fiscal_tf_printer_configuration, self).solve_status(cr, uid, ids, status, context=context)
+        r = super(epson_ar_fiscal_tf_printer_configuration,
+                  self).solve_status(cr, uid, ids, status, context=context)
         for conf in self.browse(cr, uid, ids):
-            if conf.type not in ['epson_ar_receipt', 'epson_ar_journal', 'epson_ar_slip']:
+            if conf.type not in ['epson_ar_receipt',
+                                 'epson_ar_journal',
+                                 'epson_ar_slip']:
                 continue
             for stat in r.values():
                 _logger.debug(stat)

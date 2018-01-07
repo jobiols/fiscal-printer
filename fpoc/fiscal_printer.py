@@ -56,7 +56,8 @@ class FiscalPrinterDisconnected(osv.TransientModel):
         t_fp_obj = self.pool.get('fpoc.fiscal_printer')
         R = do_event('list_printers', control=True)
         for resp in R:
-            if not resp: continue
+            if not resp:
+                continue
             for p in resp['printers']:
                 if t_fp_obj.search(cr, uid, [("name", "=", p['name'])]):
                     pass
@@ -71,19 +72,22 @@ class FiscalPrinterDisconnected(osv.TransientModel):
                     }
                     pid = self.create(cr, uid, values)
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+               context=None, count=False):
         self._update_(cr, uid, force=True)
-        return super(FiscalPrinterDisconnected, self).search(cr, uid, args, offset=offset, limit=limit, order=order,
-                                                             context=context, count=count)
+        return super(FiscalPrinterDisconnected, self).search(
+            cr, uid, args, offset=offset, limit=limit, order=order,
+                                       context=context, count=count)
 
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+    def read(self, cr, uid, ids, fields=None, context=None,
+             load='_classic_read'):
         self._update_(cr, uid, force=False)
-        return super(FiscalPrinterDisconnected, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        return super(FiscalPrinterDisconnected, self).read(
+            cr, uid, ids, fields=fields, context=context, load=load)
 
     def create_fiscal_printer(self, cr, uid, ids, context=None):
-        """
-        Create fiscal printers from this temporal printers and atach to the correct journal
-        looking for serial number
+        """ Create fiscal printers from this temporal printers and atach to
+            the correct journal looking for serial number
         """
         fp_obj = self.pool.get('fpoc.fiscal_printer')
         for pri in self.browse(cr, uid, ids):
@@ -98,7 +102,8 @@ class FiscalPrinterDisconnected(osv.TransientModel):
 
             # attach this printer to the correct journal
             journal_obj = self.pool.get('account.journal')
-            ids = journal_obj.search(cr, uid, [(['fp_serial_number', '=', pri.serialNumber])])
+            ids = journal_obj.search(
+                cr, uid, [(['fp_serial_number', '=', pri.serialNumber])])
             for journal in journal_obj.browse(cr, uid, ids):
                 journal.fiscal_printer_id = fp_id
 
@@ -153,17 +158,23 @@ class FiscalPrinter(osv.osv):
         'model': fields.char(string='Model'),
         'serialNumber': fields.char(string='Serial Number (S/N)'),
 #        'lastUpdate': fields.datetime(string='Last Update'),
-        'printerStatus': fields.function(_get_status, type="char", method=True, readonly="True", multi="state",
+        'printerStatus': fields.function(_get_status, type="char", method=True,
+                                         readonly="True", multi="state",
                                          string='Printer status'),
-        'fiscalStatus': fields.function(_get_status, type="char", method=True, readonly="True", multi="state",
+        'fiscalStatus': fields.function(_get_status, type="char", method=True,
+                                        readonly="True", multi="state",
                                         string='Fiscal status'),
-        'clock': fields.function(_get_status, type="datetime", method=True, readonly="True", multi="state",
+        'clock': fields.function(_get_status, type="datetime", method=True,
+                                 readonly="True", multi="state",
                                  string='Clock'),
         'session_id': fields.char(string='session_id'),
     }
 
-    _sql_constraints = [('model_serialNumber_unique', 'unique("model", "serialNumber")',
-                         'this printer with this model and serial number yet exists')]
+    _sql_constraints = [
+        ('model_serialNumber_unique',
+         'unique("model", "serialNumber")',
+         'this printer with this model and serial number yet exists')
+    ]
 
     def update_printers(self, cr, uid, ids, context=None):
         r = do_event('info', {})
@@ -222,7 +233,8 @@ class FiscalPrinter(osv.osv):
         for fp in self.browse(cr, uid, ids):
             try:
                 event_result = do_event('get_status', {'name': fp.name},
-                                        session_id=fp.session_id, printer_id=fp.name)
+                                        session_id=fp.session_id,
+                                        printer_id=fp.name)
             except DenialService as m:
                 raise osv.except_osv(_('Connectivity Error'), m)
             r[fp.id] = event_result.pop() if event_result else False
@@ -232,11 +244,13 @@ class FiscalPrinter(osv.osv):
         r = {}
         for fp in self.browse(cr, uid, ids):
             event_result = do_event('get_counters', {'name': fp.name},
-                                    session_id=fp.session_id, printer_id=fp.name)
+                                    session_id=fp.session_id,
+                                    printer_id=fp.name)
             r[fp.id] = event_result.pop() if event_result else False
         return r
 
-    def make_fiscal_ticket(self, cr, uid, ids, options={}, ticket={}, context=None):
+    def make_fiscal_ticket(self, cr, uid, ids, options={}, ticket={},
+                           context=None):
         fparms = {}
         r = {}
         for fp in self.browse(cr, uid, ids):
@@ -245,11 +259,13 @@ class FiscalPrinter(osv.osv):
             fparms['ticket'] = ticket
             # event_result = do_event('make_fiscal_ticket', fparms,
             event_result = do_event('make_ticket_factura', fparms,
-                                    session_id=fp.session_id, printer_id=fp.name)
+                                    session_id=fp.session_id,
+                                    printer_id=fp.name)
             r[fp.id] = event_result.pop() if event_result else False
         return r
 
-    def make_fiscal_refund_ticket(self, cr, uid, ids, options={}, ticket={}, context=None):
+    def make_fiscal_refund_ticket(self, cr, uid, ids, options={}, ticket={},
+                                  context=None):
         fparms = {}
         r = {}
         for fp in self.browse(cr, uid, ids):
@@ -259,7 +275,8 @@ class FiscalPrinter(osv.osv):
             # import pdb;pdb.set_trace()
             # event_result = do_event('make_fiscal_ticket', fparms,
             event_result = do_event('make_ticket_notacredito', fparms,
-                                    session_id=fp.session_id, printer_id=fp.name)
+                                    session_id=fp.session_id,
+                                    printer_id=fp.name)
             r[fp.id] = event_result.pop() if event_result else False
         return r
 
@@ -269,8 +286,8 @@ class FiscalPrinter(osv.osv):
         for fp in self.browse(cr, uid, ids):
             fparms['name'] = fp.name
             event_result = do_event('cancel_fiscal_ticket', fparms,
-                                    session_id=fp.session_id, printer_id=fp.name)
+                                    session_id=fp.session_id,
+                                    printer_id=fp.name)
             r[fp.id] = event_result.pop() if event_result else False
         return r
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
