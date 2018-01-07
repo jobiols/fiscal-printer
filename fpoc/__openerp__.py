@@ -25,7 +25,6 @@
         'account',
         'l10n_ar_invoice',
     ],
-    'description': 'Fiscal Printer on the Cloud',
     'license': 'AGPL-3',
     'name': 'Fiscal Printer on the Cloud',
     'test': [
@@ -37,7 +36,7 @@
         'security/ir.model.access.csv',
         'view/fpoc_menuitem.xml',
     ],
-    'version': '8.0.1.0',
+    'version': '8.0.1.1',
     'website': 'https://github.com/csrocha/odoo_fpoc',
     'installable': True,
     'active': False,
