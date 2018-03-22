@@ -1,4 +1,4 @@
 
-Support for FPOC, Odoo - Argentina Localization
-==============================================
+FPOC, Odoo - Argentina Localization
+===================================
 

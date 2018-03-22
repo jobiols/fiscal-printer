@@ -47,14 +47,16 @@ class fiscal_printer_configuration(osv.osv):
 
     def solve_status(self, cr, uid, ids, status, context=None):
         """
-        This function compute paper_state, fiscal_state and printer_state for this configuration type.
+        This function compute paper_state, fiscal_state and printer_state for
+        this configuration type.
         """
         return status
 
 
 class fiscal_printer_user(osv.AbstractModel):
     """
-    Fiscal printer user is a Abstract class to be used by the owner of the fiscal printer.
+    Fiscal printer user is a Abstract class to be used by the owner of the
+    fiscal printer.
     The entity responsable to print tickets must inheret this class.
     """
 

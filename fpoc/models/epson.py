@@ -7,7 +7,7 @@
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
-from controllers.main import do_event
+from ..controllers.main import do_event
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -232,5 +232,3 @@ class epson_ar_fiscal_tf_printer_configuration(osv.osv):
                 del conf['tail']  # Proceso especial.
                 r[conf_id] = conf
         return r
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -12,9 +12,6 @@ class AccountJournal(models.Model):
     use_fiscal_printer = fields.Boolean(
             'Asociado a una impresora fiscal'
     )
-    fp_serial_number = fields.Char(
-            'Nro de serie'
-    )
     fp_status = fields.Char(
             'Estado',
             compute='_get_fp_status'

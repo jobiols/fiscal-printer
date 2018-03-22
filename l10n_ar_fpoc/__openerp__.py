@@ -31,7 +31,7 @@
                 'partner_fiscal_constraints',
                 'account_multi_store',
                 ],
-    'name': 'Support for FPoc',
+    'name': 'Localization for FPoc',
     'init_xml': [],
     'license': 'AGPL-3',
     'test': [],
@@ -46,9 +46,8 @@
     'js': [],
     'css': [],
     'qweb': [],
-    'version': '8.0.1.1',
+    'version': '8.0.2.0.0',
     'website': '',
     'installable': True,
     'active': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

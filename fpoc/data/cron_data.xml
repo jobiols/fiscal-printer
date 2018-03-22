@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Cron data -->
+        <record id="fpoc_cron_data" model="ir.cron">
+            <field name="name">Detectar impresoras fiscales</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="model">fpoc.fiscal_printer</field>
+            <field name="function">update_printers</field>
+            <field name="args"></field>
+        </record>
+
+    </data>
+</openerp>

@@ -19,25 +19,11 @@
             <field name="view_id" ref="view_fiscal_printer_configuration_tree"/>
         </record>
 
-        <record id="action_disconnected_fiscal_printers" model="ir.actions.act_window">
-            <field name="name">Impresoras fiscales desconectadas</field>
-            <field name="res_model">fpoc.disconnected</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="target"></field>
-        </record>
-
         <menuitem id="menu_fp_config"
                   name="Impresoras Fiscales"
                   parent="account.menu_finance_receivables"
                   groups="group_fiscal_printers_admin"
                   sequence="600"/>
-
-        <menuitem id="menu_disconnected"
-                  name="Desconectadas"
-                  parent="menu_fp_config"
-                  sequence="10"
-                  action="action_disconnected_fiscal_printers"/>
 
         <menuitem id="menu_fiscal_printers"
                   name="Conectadas"
@@ -53,14 +39,12 @@
         -->
 
         <!-- mover este menu para que el usuario de fiscal printer pueda ver loo numeros de secuencia -->
-
+<!--
         <menuitem name="Point Of Sales"
                   action="l10n_ar_invoice.act_afip_point_of_sale"
                   id="l10n_ar_invoice.menu_action_afip_point_of_sale"
                   sequence="10"
                   parent="menu_fp_config"/>
-
+-->
     </data>
 </openerp>
-
-        <!-- vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4 -->
