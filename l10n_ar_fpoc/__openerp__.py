@@ -21,7 +21,7 @@
 
 {
     'author': 'Moldeo Interactive, jeo Software',
-    'category': 'base.module_category_hidden',
+    'category': 'Fiscal Printers',
     'demo_xml': [],
     'depends': ['account',
                 'fpoc',

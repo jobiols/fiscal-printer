@@ -21,7 +21,7 @@
 {
     'name': 'Partner Fiscal Constraints',
     'version': '8.0.1.0',
-    'category': 'Support',
+    'category': 'Fiscal Printers',
     'sequence': 15,
     'summary': 'Asegurar los datos que van a los controladores fiscales',
     'author':  'jeo Soft',
