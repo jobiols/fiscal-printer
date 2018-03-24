@@ -26,8 +26,8 @@ class AfipPointOfSale(models.Model):
         self.journal_ids[0].fiscal_printer_id.short_test()
 
     @api.multi
-    def long_test(self):
-        self.journal_ids[0].fiscal_printer_id.long_test()
+    def large_test(self):
+        self.journal_ids[0].fiscal_printer_id.large_test()
 
     @api.multi
     def sync_document_local_remote_number(self):
