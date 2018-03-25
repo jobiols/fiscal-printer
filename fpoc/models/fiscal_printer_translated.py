@@ -15,6 +15,7 @@ class FpocFiscalPrinter(models.Model):
         _logger.info('update printers =====================================================')
         """ check alive printers, add o delete fiscal printers accordingly
         """
+        #import wdb;wdb.set_trace()
         # chequear las impresoras vivas
         data = do_event('list_printers', control=True)
 
@@ -24,26 +25,29 @@ class FpocFiscalPrinter(models.Model):
             self.search([]).unlink()
             return
 
-        # estos son los datos de los printers vivos, en una lista
-        # es una lista con las conexiones activas y dentro otra lista con
-        # los printers
-        live_printers = []
-        for connection in data:
-            printers = connection.get('printers')
+        # Data trae los datos de los printers vivos, en una lista con las
+        # conexiones activas y dentro de cada conexion otra lista con los
+        # printers
+        active_printer_names = []  # nombre de todos los printers activos
+        active_printers = []  # todos los printers activos
 
-            # lista con los nombres de las impresores que responden (vivas)
-            for l_printer in printers:
-                _logger.info('Live printer {}'.format(l_printer.get('name')))
-                live_printers.append(l_printer.get('name'))
+        # reviso todas las conexiones que hay en data
+        for connection in data:
+            active_printers += connection.get('printers')
+
+        # obtengo lista de los nombres de las impresoras activas
+        for printer in active_printers:
+            _logger.info('Live printer {}'.format(printer.get('name')))
+            active_printer_names.append(printer.get('name'))
 
         # lista con los impresores registrados
-        registered_printers = []
-        for r_printer in self.search([]):
-            registered_printers.append(r_printer.name)
+        registered_printer_names = []
+        for printer in self.search([]):
+            registered_printer_names.append(printer.name)
 
         # vemos cuales printers hay que agregar y cuales hay que quitar
-        to_unlink = set(registered_printers) - set(live_printers)
-        to_append = set(live_printers) - set(registered_printers)
+        to_unlink = set(registered_printer_names) - set(active_printer_names)
+        to_append = set(active_printer_names) - set(registered_printer_names)
 
         for printer_name in to_unlink:
             _logger.info('Remove FISCAL PRINTER ------------------------------------- {}'.format(printer_name))
@@ -52,7 +56,7 @@ class FpocFiscalPrinter(models.Model):
         for printer_name in to_append:
             _logger.info('Add FISCAL PRINTER ---------------------------------------- {}'.format(printer_name))
             # search printer name in printers
-            for printer in printers:
+            for printer in active_printers:
                 if printer.get('name') == printer_name:
                     self.add_printer(printer)
 
