@@ -12,6 +12,7 @@ class FpocFiscalPrinter(models.Model):
 
     @api.model
     def update_printers(self):
+        _logger.info('update printers =====================================================')
         """ check alive printers, add o delete fiscal printers accordingly
         """
 
@@ -20,7 +21,7 @@ class FpocFiscalPrinter(models.Model):
 
         # si viene sin datos es porque fpoc no esta logeado, eliminar todos
         if not data:
-            _logger.error('FPOC is not logged')
+            _logger.error('No FPOC logged.')
             self.search([]).unlink()
             return
 
@@ -30,6 +31,7 @@ class FpocFiscalPrinter(models.Model):
         # lista con los nombres de las impresores que responden (vivas)
         live_printers = []
         for l_printer in printers:
+            _logger.info('Live printer {}'.format(l_printer.get('name')))
             live_printers.append(l_printer.get('name'))
 
         # lista con los impresores registrados
@@ -42,11 +44,11 @@ class FpocFiscalPrinter(models.Model):
         to_append = set(live_printers) - set(registered_printers)
 
         for printer_name in to_unlink:
-            _logger.info('Remove FISCAL PRINTER {}'.format(printer_name))
+            _logger.info('Remove FISCAL PRINTER ------------------------------------- {}'.format(printer_name))
             self.search([('name', '=', printer_name)]).unlink()
 
         for printer_name in to_append:
-            _logger.info('Add FISCAL PRINTER {}'.format(printer_name))
+            _logger.info('Add FISCAL PRINTER ---------------------------------------- {}'.format(printer_name))
             # search printer name in printers
             for printer in printers:
                 if printer.get('name') == printer_name:
