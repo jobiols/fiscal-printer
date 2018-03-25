@@ -15,7 +15,7 @@ from Queue import Queue, Empty
 import logging
 
 _logger = logging.getLogger(__name__)
-_logger.setLevel(logging.DEBUG)
+#_logger.setLevel(logging.DEBUG)
 
 # jinegconpkicmfefahjgkpinkgoabnme
 # access_control_allow_origin = 'chrome-extension://gileacnnoefamnjnhjnijommagpamona'
@@ -70,7 +70,6 @@ def connection_dropped(self, error, environ=None):
     """ Called if the connection was closed by the client.  By default
         nothing happens.
     """
-    print '//// connection dropped / error=', error
     path = environ.get('PATH_INFO', None)
     if path and path == '/fp/spool':
         q = parse_qs('&'.join([environ.get('QUERY_STRING', ''),
@@ -102,10 +101,6 @@ class DenialService(Exception):
 # Event manager
 def do_event(event, data=None, session_id=None, printer_id=None,
              control=False):
-    #import wdb;wdb.set_trace()
-
-    print '//// do_event / data=', data, 'session_id=', session_id, 'printer_id=', printer_id
-
     """
         Execute an event on client side.
 
@@ -159,7 +154,6 @@ def do_event(event, data=None, session_id=None, printer_id=None,
 
 
 def do_return(req, result):
-    print '//// do_return / req=', req,'result=',result
     """ Take response from the client side, and push result in the queue.
         If response is not related to any previous request drop the message.
     """
@@ -183,8 +177,6 @@ class FiscalPrinterController(oeweb.Controller):
 
     @oeweb.jsonrequest
     def login(self, req, database, login, password, **kw):
-        print '//// login / req=', req, 'database=', database, 'login=', login, 'password=', password
-
         wsgienv = req.httprequest.environ
         env = dict(
             base_location=req.httprequest.url_root.rstrip('/'),
@@ -196,26 +188,20 @@ class FiscalPrinterController(oeweb.Controller):
 
     @oeweb.jsonrequest
     def push(self, req, **kw):
-        print '//// push / req=', req
         return do_return(req, kw)
 
     def on_close_spool(self, **kw):
-        print '//// on_close_spool'
         _logger.debug("Closing spool %s" % self.qid)
         return
 
     @oeweb.httprequest
     def spool(self, req, **kw):
         #import wdb;wdb.set_trace()
-        print '//// spool / req=', req
         global event_id
         global event_hub
-        print 'event_id', event_id, 'event_hub', event_hub
+
         sid = req.session_id
         pid = req.params.get('printer_id', '')
-        print '+++++++++++++++++++++ SE CONECTA', pid
-        print 'sesion',sid
-        print 'printer',pid
 
         qid = ':'.join([sid, pid])
         self.qid = qid
@@ -248,11 +234,9 @@ class FiscalPrinterController(oeweb.Controller):
 
     @oeweb.jsonrequest
     def fp_info(self, req, printers, **kw):
-        print '//// fp_info / req=', req, 'printers=', printers
         return do_return(req, printers);
 
     def event_source_iter(self, event_id):
-        print '//// event_source_iter / event_id=', event_id
         qid = self.qid
 
         yield '\n\n'  # Force connection recognition on client
@@ -266,4 +250,3 @@ class FiscalPrinterController(oeweb.Controller):
                 # Force check status.
                 # If connection, spool still alive.
                 yield 'event: ping\n\n'
-

@@ -30,13 +30,13 @@
                   parent="menu_fp_config"
                   sequence="20"
                   action="action_fiscal_printer_fiscal_printer_fiscal_printers"/>
-
+<!--
                 <menuitem id="menu_fiscal_printer_configurations"
                           name="Configuracion"
                           parent="menu_fp_config"
                           sequence="30"
                     action="action_fiscal_printer_configuration"/>
-
+-->
 
         <!-- mover este menu para que el usuario de fiscal printer pueda ver loo numeros de secuencia -->
 
