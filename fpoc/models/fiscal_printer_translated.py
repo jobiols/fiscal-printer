@@ -18,9 +18,9 @@ class FpocFiscalPrinter(models.Model):
         # chequear las impresoras vivas
         data = do_event('list_printers', control=True)
 
-        # si viene sin datos es porque fpoc no esta logeado, eliminar todo
+        # si viene sin datos es porque fpoc no esta logeado, eliminar todos
         if not data:
-            _logger.error('FPOC No esta logeado')
+            _logger.error('FPOC is not logged')
             self.search([]).unlink()
             return
 
@@ -54,12 +54,18 @@ class FpocFiscalPrinter(models.Model):
 
     @api.model
     def add_printer(self, printer):
+
+        # A veces aparece sin el serial y no se attacha a ningun PV
+        # para que no pasa, si no tengo el serial no lo pongo
+        if not printer.get('serialNumber'):
+            return
+
         values = {
             'name': printer.get('name'),
             'protocol': printer.get('protocol'),
-            'model': printer.get('model', 'undefined'),
-            'serialNumber': printer.get('serialNumber', 'undefined'),
-            'session_id': printer['sid'],
+            'model': printer.get('model'),
+            'serialNumber': printer.get('serialNumber'),
+            'session_id': printer.get('sid'),
         }
         fp_id = self.create(values)
         # attach this printer to the correct journal
@@ -68,13 +74,4 @@ class FpocFiscalPrinter(models.Model):
             [('fp_serial_number', '=', values.get('serialNumber'))])
         for journal in journals:
             journal.fiscal_printer_id = fp_id
-
-    """
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        print ' =======================', args, offset, limit, order, count
-        return super(FpocFiscalPrinter, self).search(
-            args, offset=offset, limit=limit, order=order, count=count)
-        self.update_printers()
-    """
 
