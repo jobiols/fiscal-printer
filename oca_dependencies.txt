@@ -1,3 +1,2 @@
-adhoc-aeroo_reports https://github.com/jobiols/adhoc-aeroo_reports.git 8.0
 odoo-argentina https://github.com/jobiols/odoo-argentina.git 8.0
 adhoc-multi-store https://github.com/jobiols/adhoc-multi-store 8.0
