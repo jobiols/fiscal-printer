@@ -136,9 +136,12 @@ def do_event(event, data=None, session_id=None, printer_id=None,
         qids = [qid for qid in qids if
                 qid in event_hub.keys() and qid[-1] != ':']
 
+    _logger.debug("=======VARIOS QIDS======================")
     _logger.debug("Send Message '%s' to spools: %s" % (event, qids))
+    _logger.debug("========================================")
 
     for qid in qids:
+        _logger.debug("===========UNO POR CADA QID=============")
         event_event[event_id] = threading.Event()
         event_result[event_id] = None
         event_hub[qid].put(item)

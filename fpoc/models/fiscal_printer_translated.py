@@ -15,7 +15,7 @@ class FpocFiscalPrinter(models.Model):
         _logger.info('update printers =====================================================')
         """ check alive printers, add o delete fiscal printers accordingly
         """
-
+#        import wdb;wdb.set_trace()
         # chequear las impresoras vivas
         data = do_event('list_printers', control=True)
 
