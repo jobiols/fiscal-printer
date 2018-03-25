@@ -102,6 +102,8 @@ class DenialService(Exception):
 # Event manager
 def do_event(event, data=None, session_id=None, printer_id=None,
              control=False):
+    #import wdb;wdb.set_trace()
+
     print '//// do_event / data=', data, 'session_id=', session_id, 'printer_id=', printer_id
 
     """
