@@ -138,7 +138,6 @@ def do_event(event, data=None, session_id=None, printer_id=None,
 
     _logger.debug("=======VARIOS QIDS======================")
     _logger.debug("Send Message '%s' to spools: %s" % (event, qids))
-    _logger.debug("========================================")
 
     for qid in qids:
         _logger.debug("===========UNO POR CADA QID=============")
@@ -155,6 +154,7 @@ def do_event(event, data=None, session_id=None, printer_id=None,
         event_hub[qid].task_done()
 
     _logger.debug("Send Message Result '%s' was: %s" % (qids, result))
+
     return [result[qid] for qid in qids if qid in result]
 
 

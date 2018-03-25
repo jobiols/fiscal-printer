@@ -15,7 +15,6 @@ class FpocFiscalPrinter(models.Model):
         _logger.info('update printers =====================================================')
         """ check alive printers, add o delete fiscal printers accordingly
         """
-#        import wdb;wdb.set_trace()
         # chequear las impresoras vivas
         data = do_event('list_printers', control=True)
 
@@ -26,13 +25,16 @@ class FpocFiscalPrinter(models.Model):
             return
 
         # estos son los datos de los printers vivos, en una lista
-        printers = data[0].get('printers')
-
-        # lista con los nombres de las impresores que responden (vivas)
+        # es una lista con las conexiones activas y dentro otra lista con
+        # los printers
         live_printers = []
-        for l_printer in printers:
-            _logger.info('Live printer {}'.format(l_printer.get('name')))
-            live_printers.append(l_printer.get('name'))
+        for connection in data:
+            printers = connection.get('printers')
+
+            # lista con los nombres de las impresores que responden (vivas)
+            for l_printer in printers:
+                _logger.info('Live printer {}'.format(l_printer.get('name')))
+                live_printers.append(l_printer.get('name'))
 
         # lista con los impresores registrados
         registered_printers = []
