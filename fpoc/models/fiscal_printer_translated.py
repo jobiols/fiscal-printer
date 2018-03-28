@@ -12,7 +12,6 @@ class FpocFiscalPrinter(models.Model):
 
     @api.model
     def update_printers(self):
-        _logger.info('update printers =====================================================')
         """ check alive printers, add o delete fiscal printers accordingly
         """
         #import wdb;wdb.set_trace()
@@ -50,11 +49,11 @@ class FpocFiscalPrinter(models.Model):
         to_append = set(active_printer_names) - set(registered_printer_names)
 
         for printer_name in to_unlink:
-            _logger.info('Remove FISCAL PRINTER ------------------------------------- {}'.format(printer_name))
+            _logger.info('Remove FISCAL PRINTER -- {}'.format(printer_name))
             self.search([('name', '=', printer_name)]).unlink()
 
         for printer_name in to_append:
-            _logger.info('Add FISCAL PRINTER ---------------------------------------- {}'.format(printer_name))
+            _logger.info('Add FISCAL PRINTER -- {}'.format(printer_name))
             # search printer name in printers
             for printer in active_printers:
                 if printer.get('name') == printer_name:
