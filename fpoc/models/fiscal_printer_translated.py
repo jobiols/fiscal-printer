@@ -16,6 +16,8 @@ class FpocFiscalPrinter(models.Model):
         """
         #import wdb;wdb.set_trace()
         # chequear las impresoras vivas
+        _logger.error('about to list printers.')
+
         data = do_event('list_printers', control=True)
 
         # si viene sin datos es porque fpoc no esta logeado, eliminar todos
