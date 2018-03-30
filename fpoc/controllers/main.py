@@ -15,7 +15,7 @@ from Queue import Queue, Empty
 import logging
 
 _logger = logging.getLogger(__name__)
-# _logger.setLevel(logging.DEBUG)
+#_logger.setLevel(logging.DEBUG)
 
 # jinegconpkicmfefahjgkpinkgoabnme
 # access_control_allow_origin = 'chrome-extension://gileacnnoefamnjnhjnijommagpamona'
@@ -37,7 +37,8 @@ http_old_dispatch = oeweb.HttpRequest.dispatch
 def http_dispatch(self):
     r = http_old_dispatch(self)
     if hasattr(r, 'headers'):
-        r.headers._list.append(('Access-Control-Allow-Origin', access_control_allow_origin))
+        r.headers._list.append(
+            ('Access-Control-Allow-Origin', access_control_allow_origin))
         r.headers._list.append(('Access-Control-Allow-Credentials', 'true'))
     return r
 
@@ -51,7 +52,8 @@ json_old_dispatch = oeweb.JsonRequest.dispatch
 def json_dispatch(self):
     r = json_old_dispatch(self)
     if hasattr(r, 'headers'):
-        r.headers._list.append(('Access-Control-Allow-Origin', access_control_allow_origin))
+        r.headers._list.append(
+            ('Access-Control-Allow-Origin', access_control_allow_origin))
         r.headers._list.append(('Access-Control-Allow-Credentials', 'true'))
     return r
 
@@ -65,8 +67,8 @@ wsgi_old_connection_dropped = WSGIRequestHandler.connection_dropped
 
 
 def connection_dropped(self, error, environ=None):
-    """Called if the connection was closed by the client.  By default
-    nothing happens.
+    """ Called if the connection was closed by the client.  By default
+        nothing happens.
     """
     path = environ.get('PATH_INFO', None)
     if path and path == '/fp/spool':
@@ -77,9 +79,12 @@ def connection_dropped(self, error, environ=None):
         qid = "%s:%s" % (sid, pid)
         if qid in event_hub:
             del event_hub[qid]
-            _logger.debug(u"Removing spools %s by %s" % (qid, str(error).decode('utf8')))
+            _logger.debug(
+                u"Removing spools %s by %s" % (qid, str(error).decode('utf8')))
         else:
-            _logger.warning(u"Removing spools %s by %s, but it not was stored." % (qid, str(error).decode('utf8')))
+            _logger.warning(
+                u"Removing spools %s by %s, but it not was stored." % (
+                    qid, str(error).decode('utf8')))
 
 
 WSGIRequestHandler.connection_dropped = connection_dropped
@@ -94,12 +99,17 @@ class DenialService(Exception):
 
 
 # Event manager
-def do_event(event, data={}, session_id=None, printer_id=None, control=False):
+def do_event(event, data=None, session_id=None, printer_id=None,
+             control=False):
     """
-    Execute an event in the client side.
+        Execute an event on client side.
 
-    If client not response in 60 seg, then raise a DenialService. Else return the client result.
+        If client does not response in 60 seg, raise DenialService.
+        Else return client result.
     """
+    if not data:
+        data = dict()
+
     global event_id
 
     event_id += 1
@@ -110,37 +120,42 @@ def do_event(event, data={}, session_id=None, printer_id=None, control=False):
         'data': json.dumps(data),
     }
 
-    # Select target of queue. Control go to Chrome Application, else take printers.
-    # All control queue end with ':'.
+    # Select target of queue. Control go to Chrome Application, else take
+    # printers. All control queue end with ':'.
     if control:
-        qids = [session_id] if session_id else [qid for qid in event_hub.keys() if qid[-1] == ':']
+        qids = [session_id] if session_id else [qid for qid in event_hub.keys()
+                                                if qid[-1] == ':']
     else:
         qid = ':'.join([session_id or '', printer_id or ''])
         qids = [qid] if qid != ':' else event_hub.keys()
-        qids = [qid for qid in qids if qid in event_hub.keys() and qid[-1] != ':']
+        qids = [qid for qid in qids if
+                qid in event_hub.keys() and qid[-1] != ':']
 
-    _logger.debug("Send message NUMERO UNO '%s' to spools: %s" % (event, qids))
+    _logger.debug("=======VARIOS QIDS======================")
+    _logger.debug("Send Message '%s' to spools: %s" % (event, qids))
 
     for qid in qids:
+        _logger.debug("===========UNO POR CADA QID=============")
         event_event[event_id] = threading.Event()
         event_result[event_id] = None
         event_hub[qid].put(item)
         w = event_event[event_id].wait(300)
-        if not w: raise osv.except_osv(_('Error!'), _('Timeout happen!!'))
-        _logger.debug("Return NUMERO UNO '%s': %s" % (qids, w))
+        if not w:
+            raise osv.except_osv(_('Error!'), _('Timeout happen!!'))
+
+        _logger.debug("Send Message Ret '%s': %s" % (qids, w))
+
         result[qid] = event_result[event_id]
         event_hub[qid].task_done()
 
-    _logger.debug("Result from NUMERO UNO '%s' was: %s" % (qids, result))
+    _logger.debug("Send Message Result '%s' was: %s" % (qids, result))
 
     return [result[qid] for qid in qids if qid in result]
 
 
 def do_return(req, result):
-    """
-    Take the response from the client side, and push result in the queue.
-
-    If the response is not related to any previous request drop the message.
+    """ Take response from the client side, and push result in the queue.
+        If response is not related to any previous request drop the message.
     """
     sid = req.session_id
     pid = req.params.get('printer_id', '')
@@ -162,12 +177,11 @@ class FiscalPrinterController(oeweb.Controller):
 
     @oeweb.jsonrequest
     def login(self, req, database, login, password, **kw):
-        # import pdb;pdb.set_trace()
         wsgienv = req.httprequest.environ
         env = dict(
-              base_location=req.httprequest.url_root.rstrip('/'),
-              HTTP_HOST=wsgienv['HTTP_HOST'],
-              REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+            base_location=req.httprequest.url_root.rstrip('/'),
+            HTTP_HOST=wsgienv['HTTP_HOST'],
+            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
         )
         req.session.authenticate(database, login, password, env)
         return {'session_id': req.session_id}
@@ -182,11 +196,13 @@ class FiscalPrinterController(oeweb.Controller):
 
     @oeweb.httprequest
     def spool(self, req, **kw):
+        #import wdb;wdb.set_trace()
         global event_id
         global event_hub
 
         sid = req.session_id
         pid = req.params.get('printer_id', '')
+
         qid = ':'.join([sid, pid])
         self.qid = qid
 
@@ -201,16 +217,19 @@ class FiscalPrinterController(oeweb.Controller):
         event_hub[qid] = Queue()
 
         if req.httprequest.headers.get('accept') != 'text/event-stream':
-            return req.make_response('Not implemented', headers={'Status': '501 Not Implemented'})
+            return req.make_response('Not implemented',
+                                     headers={'Status': '501 Not Implemented'})
 
         # Last event id.
-        last_event_id = req.httprequest.headers.get('last-event-id', 0, type=int)
+        last_event_id = req.httprequest.headers.get('last-event-id', 0,
+                                                    type=int)
         if last_event_id > event_id:
             event_id = last_event_id
 
-        self.spool_response = req.make_response(self.event_source_iter(last_event_id),
-                                                [('cache-control', 'no-cache'),
-                                                 ('Content-Type', 'text/event-stream')])
+        self.spool_response = req.make_response(
+            self.event_source_iter(last_event_id),
+            [('cache-control', 'no-cache'),
+             ('Content-Type', 'text/event-stream')])
         return self.spool_response
 
     @oeweb.jsonrequest
@@ -224,11 +243,10 @@ class FiscalPrinterController(oeweb.Controller):
         while True:
             try:
                 message = event_hub[qid].get(timeout=timeout)
-                _logger.debug("Send message NUMERO DOS %s to %s" % (message['event'], qid))
+                _logger.debug("Send message NUMERO DOS %s to %s" % (
+                    message['event'], qid))
                 yield 'event: %(event)s\ndata: %(data)s\nid: %(id)s\n\n' % message
             except Empty:
                 # Force check status.
                 # If connection, spool still alive.
                 yield 'event: ping\n\n'
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

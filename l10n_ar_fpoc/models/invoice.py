@@ -66,57 +66,6 @@ responsability_map = {
 class Invoice(osv.osv):
     _inherit = 'account.invoice'
 
-    def check_counters(self, cr, uid, ids, sequences, context=None):
-        """ Verificar que las secuencias son correctas o generar una excepcion
-        """
-        try:
-            FA = sequences['last_a_sale_document']
-            NA = sequences['last_a_credit_document']
-            FB = sequences['last_b_sale_document']
-            NB = sequences['last_b_credit_document']
-        except:
-            raise osv.except_osv(u'Error de conexión con el controlador fiscal',
-                                 u'Verifique que el controlador esté online y conectado')
-
-        for inv in self.browse(cr, uid, ids, context):
-            if inv.type == 'out_invoice':
-                if inv.journal_document_class_id.afip_document_class_id.document_letter_id.name == 'A':
-                    next_number = int(FA) + 1
-                if inv.journal_document_class_id.afip_document_class_id.document_letter_id.name == 'B':
-                    next_number = int(FB) + 1
-            if inv.type == 'out_refund':
-                if inv.journal_document_class_id.afip_document_class_id.document_letter_id.name == 'A':
-                    next_number = int(NA) + 1
-                if inv.journal_document_class_id.afip_document_class_id.document_letter_id.name == 'B':
-                    next_number = int(NB) + 1
-
-            if next_number != inv.next_invoice_number:
-                raise osv.except_osv(u'Error de secuencia',
-                                     'Proximo numero Odoo {} - Proximo numero Controlador Fiscal {}'.format(
-                                             inv.next_invoice_number,
-                                             next_number)
-                                     )
-
-    def action_number(self, cr, uid, ids, context=None):
-        """ sobreescribir action_number para chequear las secuencias antes de mandar a imprimir el ticket
-        """
-        for inv in self.browse(cr, uid, ids, context):
-            if inv.validation_type == 'fiscal_controller':
-                res = inv.journal_id.fiscal_printer_id.get_counters()
-                sequences = res[inv.journal_id.fiscal_printer_id.id]
-                self.check_counters(cr, uid, ids, sequences, context)
-
-        super(Invoice, self).action_number(cr, uid, ids, context)
-
-    def get_validation_type(self, cr, uid, ids, context=None):
-        """ detectar cuando el journal esta asociado a una impresora fiscal para poner luego el boton correcto
-        """
-        super(Invoice, self).get_validation_type(cr, uid, ids, context)
-
-        for inv in self.browse(cr, uid, ids, context):
-            if not inv.validation_type and inv.journal_id.fiscal_printer_id:
-                inv.validation_type = 'fiscal_controller'
-
     def action_fiscal_printer(self, cr, uid, ids, context=None):
         """ Imprimir un ticket en controlador fiscal.
         """
@@ -270,5 +219,3 @@ class Invoice(osv.osv):
                                      _(u'Unknown error.'))
             else:
                 return True
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

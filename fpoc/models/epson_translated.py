@@ -16,10 +16,10 @@ class EpsonArFiscalPrinter(models.Model):
 
     @api.one
     def _get_point_of_sale(self):
-        a = 'unknown'
+        pos = 'unknown'
         journal_obj = self.env['account.journal']
         for journal in journal_obj.search(
             [('fp_serial_number', '=', self.serialNumber)]):
-            a = journal.point_of_sale_id.name
+            pos = journal.point_of_sale_id.name
 
-        self.point_of_sale = a
+        self.point_of_sale = pos

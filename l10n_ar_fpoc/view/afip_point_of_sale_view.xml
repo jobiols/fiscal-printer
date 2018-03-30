@@ -30,7 +30,7 @@
                             string="Test corto"
                             type="object"
                             attrs="{'invisible':[('type', '!=', 'fiscal_controller')]}"/>
-                    <button name="long_test"
+                    <button name="large_test"
                             string="Test largo"
                             type="object"
                             attrs="{'invisible':[('type', '!=', 'fiscal_controller')]}"/>

@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- TREEVIEW -->
-        <record id="view_disconnected_tree" model="ir.ui.view">
-            <field name="name">fpoc.disconnected.tree</field>
-            <field name="model">fpoc.disconnected</field>
-            <field name="arch" type="xml">
-                <tree string="Disconnected Fiscal Printer" create="false" edit="false">
-                    <field name="name"/>
-                    <field name="protocol"/>
-                    <field name="model"/>
-                    <field name="user_id"/>
-                    <field name="session_id"/>
-                    <button type="object" name="create_fiscal_printer" string="Create"
-                            icon="STOCK_NEW"/>
-                </tree>
-            </field>
-        </record>
-
         <!-- SEARCH VIEW -->
         <record id="view_fiscal_printer_fiscal_printer_filter" model="ir.ui.view">
             <field name="name">fpoc.fpoc.select</field>
@@ -186,5 +169,3 @@
 
     </data>
 </openerp>
-        <!-- vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
-             -->

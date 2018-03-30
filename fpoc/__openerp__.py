@@ -20,10 +20,10 @@
 
 {
     'author': 'Moldeo Interactive, jeo Software',
-    'category': 'base.module_category_hidden',
+    'category': 'Fiscal Printers',
     'depends': [
         'account',
-        'l10n_ar_invoice',
+        #'l10n_ar_invoice',
     ],
     'license': 'AGPL-3',
     'name': 'Fiscal Printer on the Cloud',
@@ -35,11 +35,10 @@
         'security/fiscal_printer_group.xml',
         'security/ir.model.access.csv',
         'view/fpoc_menuitem.xml',
+        'data/cron_data.xml'
     ],
-    'version': '8.0.1.1',
+    'version': '8.0.2.0.0',
     'website': 'https://github.com/csrocha/odoo_fpoc',
     'installable': True,
     'active': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

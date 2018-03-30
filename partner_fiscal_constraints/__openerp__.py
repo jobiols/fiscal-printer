@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2014 Moldeo interactive
-#                  2017 jeo Software  (http://www.jeosoft.com.ar)
+#    Copyright (C) 2015  ADHOC SA  (http://www.adhoc.com.ar)
+#    All Rights Reserved.
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,36 +18,31 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 {
-    'author': 'Moldeo Interactive, jeo Software',
+    'name': 'Partner Fiscal Constraints',
+    'version': '8.0.1.0',
     'category': 'Fiscal Printers',
-    'demo_xml': [],
-    'depends': ['account',
-                'fpoc',
-                'l10n_ar_invoice',
-                'l10n_ar_afipws_fe',
-                'ticket_citi_fix',
-                'partner_fiscal_constraints',
-                'account_multi_store',
-                ],
-    'name': 'Localization for FPoc',
-    'init_xml': [],
+    'sequence': 15,
+    'summary': 'Asegurar los datos que van a los controladores fiscales',
+    'author':  'jeo Soft',
+    'website': 'jeosoft.com.ar',
     'license': 'AGPL-3',
-    'test': [],
-    'data': [
-        'view/ra_fpoc_view.xml',
-        'view/journal_view.xml',
-        'view/invoice_workflow.xml',
-        'view/invoice_view.xml',
-        'view/afip_point_of_sale_view.xml'
+    'images': [
     ],
-    'post_load': '',
-    'js': [],
-    'css': [],
-    'qweb': [],
-    'version': '8.0.2.0.0',
-    'website': '',
+    'depends': [
+        'base_vat',
+        'l10n_ar_invoice'
+    ],
+    'data': [
+        'views/partner_view.xml'
+    ],
+    'demo': [
+    ],
+    'test': [
+    ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
+    'application': False,
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,7 +7,7 @@
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
-from controllers.main import do_event
+from ..controllers.main import do_event
 from datetime import datetime
 
 from openerp.addons.fpoc.controllers.main import DenialService
@@ -18,105 +18,6 @@ _logger = logging.getLogger(__name__)
 
 
 # _logger.setLevel(logging.DEBUG)
-
-
-class FiscalPrinterDisconnected(osv.TransientModel):
-    """
-    Disconnected but published printers.
-    """
-    _name = 'fpoc.disconnected'
-    _description = 'Printers not connected to the server.'
-
-    _columns = {
-        'name': fields.char(string='Name'),
-        'protocol': fields.char(string='Protocol'),
-        'model': fields.char(string='Model'),
-        'serialNumber': fields.char(string='Serial Number'),
-        'session_id': fields.char(string='Session'),
-        'user_id': fields.many2one('res.users', string='Responsable'),
-    }
-
-    def auto_connect(self, cr, uid, context=None):
-        """ si hay una impresora desconectada la conecta, y la linkea
-            con el diario correspondiente mirando el nro de serie.
-            llamado desde cron
-        """
-        ids = self.search(cr, uid, [], context=context)
-        if ids:
-            for fiscal_id in ids:
-                self.create_fiscal_printer(cr, uid, [fiscal_id])
-
-    def _update_(self, cr, uid, force=True, context=None):
-        cr.execute('SELECT COUNT(*) FROM %s' % self._table)
-        count = cr.fetchone()[0]
-        if not force and count > 0:
-            return
-        if count > 0:
-            cr.execute('DELETE FROM %s' % self._table)
-        t_fp_obj = self.pool.get('fpoc.fiscal_printer')
-        R = do_event('list_printers', control=True)
-        for resp in R:
-            if not resp:
-                continue
-            for p in resp['printers']:
-                if t_fp_obj.search(cr, uid, [("name", "=", p['name'])]):
-                    pass
-                else:
-                    values = {
-                        'name': p['name'],
-                        'protocol': p['protocol'],
-                        'model': p.get('model', 'undefined'),
-                        'serialNumber': p.get('serialNumber', 'undefined'),
-                        'session_id': p['sid'],
-                        'user_id': p['uid'],
-                    }
-                    pid = self.create(cr, uid, values)
-
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-               context=None, count=False):
-        self._update_(cr, uid, force=True)
-        return super(FiscalPrinterDisconnected, self).search(
-            cr, uid, args, offset=offset, limit=limit, order=order,
-                                       context=context, count=count)
-
-    def read(self, cr, uid, ids, fields=None, context=None,
-             load='_classic_read'):
-        self._update_(cr, uid, force=False)
-        return super(FiscalPrinterDisconnected, self).read(
-            cr, uid, ids, fields=fields, context=context, load=load)
-
-    def create_fiscal_printer(self, cr, uid, ids, context=None):
-        """ Create fiscal printers from this temporal printers and atach to
-            the correct journal looking for serial number
-        """
-        fp_obj = self.pool.get('fpoc.fiscal_printer')
-        for pri in self.browse(cr, uid, ids):
-            values = {
-                'name': pri.name,
-                'protocol': pri.protocol,
-                'model': pri.model,
-                'serialNumber': pri.serialNumber,
-                'session_id': pri.session_id
-            }
-            fp_id = fp_obj.create(cr, uid, values)
-
-            # attach this printer to the correct journal
-            journal_obj = self.pool.get('account.journal')
-            ids = journal_obj.search(
-                cr, uid, [(['fp_serial_number', '=', pri.serialNumber])])
-            for journal in journal_obj.browse(cr, uid, ids):
-                journal.fiscal_printer_id = fp_id
-
-        return {
-            'name': _('Fiscal Printers'),
-            'domain': [],
-            'res_model': 'fpoc.fiscal_printer',
-            'type': 'ir.actions.act_window',
-            'view_id': False,
-            'view_mode': 'tree,form',
-            'view_type': 'form',
-            'context': context,
-        }
 
 
 class FiscalPrinter(osv.osv):
@@ -150,14 +51,14 @@ class FiscalPrinter(osv.osv):
         return r
 
     _name = 'fpoc.fiscal_printer'
-    _description = 'fiscal_printer'
+    _description = 'Connected fiscal printers'
 
     _columns = {
         'name': fields.char(string='Name', required=True),
         'protocol': fields.char(string='Protocol'),
         'model': fields.char(string='Model'),
         'serialNumber': fields.char(string='Serial Number (S/N)'),
-#        'lastUpdate': fields.datetime(string='Last Update'),
+        'lastUpdate': fields.datetime(string='Last Update'),
         'printerStatus': fields.function(_get_status, type="char", method=True,
                                          readonly="True", multi="state",
                                          string='Printer status'),
@@ -173,12 +74,8 @@ class FiscalPrinter(osv.osv):
     _sql_constraints = [
         ('model_serialNumber_unique',
          'unique("model", "serialNumber")',
-         'this printer with this model and serial number yet exists')
+         'this printer with this model and serial number already exists')
     ]
-
-    def update_printers(self, cr, uid, ids, context=None):
-        r = do_event('info', {})
-        return True
 
     def short_test(self, cr, uid, ids, context=None):
         for fp in self.browse(cr, uid, ids):

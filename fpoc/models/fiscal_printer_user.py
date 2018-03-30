@@ -47,14 +47,16 @@ class fiscal_printer_configuration(osv.osv):
 
     def solve_status(self, cr, uid, ids, status, context=None):
         """
-        This function compute paper_state, fiscal_state and printer_state for this configuration type.
+        This function compute paper_state, fiscal_state and printer_state for
+        this configuration type.
         """
         return status
 
 
 class fiscal_printer_user(osv.AbstractModel):
     """
-    Fiscal printer user is a Abstract class to be used by the owner of the fiscal printer.
+    Fiscal printer user is a Abstract class to be used by the owner of the
+    fiscal printer.
     The entity responsable to print tickets must inheret this class.
     """
 
@@ -152,7 +154,7 @@ class fiscal_printer_user(osv.AbstractModel):
         for usr in self.browse(cr, uid, ids, context):
             if not usr.fiscal_printer_id:
                 raise osv.except_osv(_('Error!'),
-                                     _('Selected journal has not printer associated.'))
+                                     _('Selected journal has no printer associated. Retry later.'))
             if not usr.fiscal_printer_configuration_id:
                 raise osv.except_osv(_('Error!'),
                                      _('Selected journal has not configuration associated.'))
@@ -180,7 +182,7 @@ class fiscal_printer_user(osv.AbstractModel):
         for usr in self.browse(cr, uid, ids, context):
             if not usr.fiscal_printer_id:
                 raise osv.except_osv(_('Error!'),
-                                     _('Selected journal has not printer associated.'))
+                                     _('Selected journal has no printer associated. Retry Later'))
             if not usr.fiscal_printer_configuration_id:
                 raise osv.except_osv(_('Error!'),
                                      _('Selected journal has not configuration associated.'))
@@ -247,4 +249,3 @@ class fiscal_printer_user(osv.AbstractModel):
             r[usr.id] = usr.fiscal_printer_id.shift_change()
         return r
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

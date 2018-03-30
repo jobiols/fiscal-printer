@@ -4,10 +4,5 @@
 # directory
 ##############################################################################
 
-import fiscal_printer
-import fiscal_printer_user
-import controllers
-import epson
-import epson_translated
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from . import controllers
+from . import models
