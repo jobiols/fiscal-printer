@@ -167,8 +167,9 @@ class Invoice(osv.osv):
                             "taxes_rate": 0
                         })
 
-                # TODO Quitar esto cuando ande bien.
+                # TODO Agregue logging para ver factura.
                 _logger.info('-------------------------------------------------------------')
+                _logger.info('factura {}'.format(inv.partner_id.document_number))
                 for line in ticket['lines']:
                     _logger.info('{:12.2f} IVA {:.2f}% {:2.0f}Un {}'.format(
                             line['unit_price'],
