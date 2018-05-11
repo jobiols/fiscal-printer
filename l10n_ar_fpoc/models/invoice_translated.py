@@ -15,6 +15,10 @@ class AccountInvoice(models.Model):
         'Nro ticket impreso'
     )
 
+    no_fiscal_printer = fields.Boolean(
+        default=False
+    )
+
     @api.multi
     def action_number(self):
         """ sobreescribir action_number para chequear las secuencias antes

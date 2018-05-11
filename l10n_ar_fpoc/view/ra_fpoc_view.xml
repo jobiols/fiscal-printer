@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <field name="move_id" position="after">
                     <field name="nro_ticket_impreso"/>
+                    <field name="no_fiscal_printer"/>
                 </field>
 
                 <!-- el documento origen debe estar porque sino se cuelga al mandar un ticket

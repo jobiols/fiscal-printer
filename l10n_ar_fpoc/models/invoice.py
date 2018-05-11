@@ -77,6 +77,11 @@ class Invoice(osv.osv):
                                  _(u'Please, validate one ticket at time.'))
 
         for inv in self.browse(cr, uid, ids, context):
+
+            # flag to avoid fiscal printer
+            if inv.no_fiscal_printer:
+                return True
+
             if inv.journal_id.use_fiscal_printer:
                 if inv.amount_total > 999 and inv.partner_id.id == inv.journal_id.fiscal_printer_anon_partner_id.id:
                     raise osv.except_osv(u'Cancelando validacion',
